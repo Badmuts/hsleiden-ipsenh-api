@@ -1,0 +1,18 @@
+# Base this docker container off the official golang docker image.
+# Docker containers inherit everything from their base.
+FROM golang:1.8.0
+# Create a directory inside the container to store all our application and then make it the working directory.
+RUN mkdir -p /go/src/github.com/badmuts/hsleiden-ipsenh-api
+WORKDIR /go/src/github.com/badmuts/hsleiden-ipsenh-api
+# Copy the hsleiden-ipsenh-api directory (where the Dockerfile lives) into the container.
+COPY . /go/src/github.com/badmuts/hsleiden-ipsenh-api
+# Download and install any required third party dependencies into the container.
+RUN curl https://glide.sh/get | sh
+RUN glide install
+# Set the PORT environment variable inside the container
+ENV PORT 8080
+# Expose port 3000 to the host so we can access the gin proxy
+EXPOSE 3000
+# Now tell Docker what command to run when the container starts
+# CMD gin run
+CMD go run main.go
