@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 type Sensor struct {
 	name       string
 	sensorType string
@@ -9,8 +7,4 @@ type Sensor struct {
 	uuid       int
 	datapoints []Datapoint
 	hub        Hub
-}
-
-func main() {
-	fmt.Println("Sensor class")
 }
