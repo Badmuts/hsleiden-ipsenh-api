@@ -5,5 +5,9 @@ type Room struct {
 	Size         int
 	MAX_CAPACITY int
 	Occupation   int
-	Hubs         []*Hub
+	Hubs         Hubs
+}
+
+type Rooms struct {
+	rooms map[int]Room
 }

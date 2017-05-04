@@ -2,6 +2,6 @@ package main
 
 type Building struct {
 	Name     string
-	Rooms    []Room
+	Rooms    Rooms
 	Location string
 }

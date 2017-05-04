@@ -5,6 +5,10 @@ type Sensor struct {
 	SensorType string
 	Status     bool
 	UuId       int
-	Datapoints []Datapoint
+	Datapoints Datapoints
 	Hub        *Hub
+}
+
+type Sensors struct {
+	sensors map[int]Sensor
 }

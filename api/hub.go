@@ -1,5 +1,9 @@
 package main
 
 type Hub struct {
-	Sensor []Sensor
+	Sensor Sensors
+}
+
+type Hubs struct {
+	hubs map[int]Hub
 }
