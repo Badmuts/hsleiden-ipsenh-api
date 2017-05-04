@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func Test(t *testing.T) {
+func CheckIfRoomIsOverOccpupied(t *testing.T) {
 	room := Room{Name: "G3.076", Occupation: 20, MAX_CAPACITY: 15, Size: 20}
 
 	if room.Occupation > room.MAX_CAPACITY {
