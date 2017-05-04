@@ -1,7 +1,7 @@
 package api
 
 type Building struct {
-	Name     string
-	Rooms    Rooms
-	Location string
+	Name     string `json:"name"`
+	Rooms    Rooms  `json:"rooms"`
+	Location string `json:"ocation"`
 }

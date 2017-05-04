@@ -1,7 +1,7 @@
 package api
 
 type Hub struct {
-	Sensor Sensors
+	Sensor Sensors `json:"sensors"`
 }
 
 type Hubs struct {
