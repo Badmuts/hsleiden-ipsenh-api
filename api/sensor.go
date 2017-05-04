@@ -1,4 +1,4 @@
-package main
+package api
 
 type Sensor struct {
 	Name       string

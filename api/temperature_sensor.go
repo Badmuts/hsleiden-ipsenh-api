@@ -1,4 +1,4 @@
-package main
+package api
 
 type TemperatureSensor struct {
 	Temperature_sensor_datapoints Datapoints

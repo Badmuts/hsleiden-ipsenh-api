@@ -1,4 +1,4 @@
-package main
+package api
 
 type OccupationSensor struct {
 	In_sensor_datapoints  Datapoints

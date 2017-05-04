@@ -1,4 +1,4 @@
-package main
+package api
 
 type Room struct {
 	Name         string
