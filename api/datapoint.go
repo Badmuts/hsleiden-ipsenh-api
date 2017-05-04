@@ -1,8 +1,8 @@
 package main
 
 type Datapoint struct {
-	sensor    Sensor
-	key       int
-	value     float32
-	timestamp int //dit moet nog een timestamp worden
+	Sensor    *Sensor
+	Key       int
+	Value     float32
+	Timestamp int //dit moet nog een timestamp worden
 }

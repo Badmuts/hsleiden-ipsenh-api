@@ -1,7 +1,7 @@
 package main
 
 type TemperatureSensor struct {
-	temperature_sensor_datapoints []Datapoint
-	current_temperature           float32
-	avg_temperature               float32
+	Temperature_sensor_datapoints []Datapoint
+	Current_temperature           float32
+	Avg_temperature               float32
 }
