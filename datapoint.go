@@ -8,7 +8,7 @@ type Datapoint struct {
 	sensor    Sensor
 	key       int
 	value     float32
-	timestamp time
+	timestamp int //dit moet nog een timestamp worden
 }
 
 func main() {
