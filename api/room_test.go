@@ -6,18 +6,14 @@ import (
 )
 
 func Test(t *testing.T) {
-	// var room Room
-
-	var room = Room{Name: "G3.076", Occupation: 20, MAX_CAPACITY: 15, Size: 20}
-
-	// room.Name = "G3.076"
-	// room.Occupation = 20
-	// room.MAX_CAPACITY = 15
-	// room.Size = 20
+	room := Room{Name: "G3.076", Occupation: 20, MAX_CAPACITY: 15, Size: 20}
 
 	if room.Occupation > room.MAX_CAPACITY {
-		fmt.Println(room.Name, room.Occupation, room.MAX_CAPACITY)
+		fmt.Println("Name: ", room.Name, "Occupation: ", room.Occupation, "Max Capacity: ", room.MAX_CAPACITY)
 		fmt.Println("Too many students in this room")
-		t.Failed()
+		t.Fail()
+	} else {
+		fmt.Println("TEST PASSED!")
 	}
+
 }
