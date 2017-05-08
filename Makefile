@@ -18,8 +18,9 @@ package: compile build
 
 # Run linters, simple code quality check
 lint:
-	go tool vet .
-	golint .
+	golint $$(go list ./... | grep -v /vendor/)
+
+# go tool vet $$(go list ./... | grep -v /vendor/)
 
 # Run tests
 test:
