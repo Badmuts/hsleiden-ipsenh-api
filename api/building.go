@@ -1,7 +1,7 @@
 package api
 
 type Building struct {
-	Name     string `json:"name"`
-	Rooms    Rooms  `json:"rooms"`
-	Location string `json:"location"`
+	Name     string       `json:"name"`
+	Rooms    map[int]Room `json:"rooms"`
+	Location string       `json:"location"`
 }

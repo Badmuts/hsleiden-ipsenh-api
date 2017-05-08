@@ -10,7 +10,3 @@ type Datapoint struct {
 	Value     float32   `json:"value"`
 	Timestamp time.Time `json:"timestamp"`
 }
-
-type Datapoints struct {
-	datapoints map[int]Datapoint
-}
