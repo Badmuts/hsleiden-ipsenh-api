@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: operations/docker/Dockerfile.dev
     ports: 
-      - "3000:3000"
+      - "8080:8080"
     environment: 
       - PORT=8080
     volumes: 
