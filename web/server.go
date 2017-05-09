@@ -2,6 +2,7 @@ package web
 
 import (
 	"github.com/badmuts/hsleiden-ipsenh-api/controller"
+	"github.com/badmuts/hsleiden-ipsenh-api/db"
 	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
 	"github.com/urfave/negroni"
@@ -16,8 +17,10 @@ type Server struct {
 func NewServer() *Server {
 	r := render.New()
 	router := mux.NewRouter()
+	db := db.Connect()
 
 	controller.NewHealthController(router, r)
+	controller.NewRegisterController(router, r, db)
 
 	server := Server{negroni.Classic()}
 	server.UseHandler(router)
