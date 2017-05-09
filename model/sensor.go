@@ -3,8 +3,6 @@ package model
 import (
 	"log"
 
-	"fmt"
-
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -20,7 +18,6 @@ type Sensor struct {
 }
 
 func GetSensorsByHubId(id string, db *mgo.Database) []Sensor {
-	fmt.Printf("ID " + id)
 	sensors := []Sensor{}
 	err := db.C("sensor").Find(bson.M{"hub": id}).All(&sensors)
 

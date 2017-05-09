@@ -1,7 +1,9 @@
 package model
 
-import "gopkg.in/mgo.v2/bson"
-import "gopkg.in/mgo.v2"
+import (
+	mgo "gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+)
 
 type Hub struct {
 	Id      bson.ObjectId `json:"id" bson:"_id,omitempty"`
@@ -15,10 +17,6 @@ type HubJSON struct {
 	Sensors []Sensor      `json:"sensors"`
 }
 
-func (h *Hub) Sensors(db *mgo.Database) HubJSON {
-	hub := HubJSON{}
-	hub.Name = h.Name
-	hub.Id = h.Id
-	hub.Sensors = GetSensorsByHubId(h.Id.Hex(), db)
-	return hub
+func (h *Hub) Sensors(db *mgo.Database) []Sensor {
+	return GetSensorsByHubId(h.Id.Hex(), db)
 }
