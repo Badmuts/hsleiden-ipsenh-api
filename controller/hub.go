@@ -17,11 +17,12 @@ type HubController struct {
 	router *mux.Router
 	r      *render.Render
 	hubs   *mgo.Collection
+	db     *mgo.Database
 }
 
 // NewHubController creates the controller
 func NewHubController(router *mux.Router, r *render.Render, db *mgo.Database) *HubController {
-	ctrl := &HubController{router, r, db.C("hub")}
+	ctrl := &HubController{router, r, db.C("hub"), db}
 	ctrl.Register()
 	return ctrl
 }
@@ -53,13 +54,12 @@ func (c *HubController) findOne(res http.ResponseWriter, req *http.Request) {
 	hub := model.Hub{}
 
 	err := c.hubs.FindId(bson.ObjectIdHex(id)).One(&hub)
-
 	if err != nil {
 		c.r.JSON(res, http.StatusInternalServerError, err)
 		log.Fatal(err)
 	}
 
-	c.r.JSON(res, http.StatusOK, hub)
+	c.r.JSON(res, http.StatusOK, hub.Sensors(c.db))
 }
 
 func (c *HubController) find(res http.ResponseWriter, req *http.Request) {
