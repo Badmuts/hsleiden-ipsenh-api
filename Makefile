@@ -13,18 +13,25 @@ NC=\033[0m
 .PHONY: coverage
 
 run: start
-suite: lint test coverage
-package: compile build
+suite: install lint test
+package: install compile build
+
+# Install packages
+install:
+	glide install
 
 # Run linters, simple code quality check
 lint:
-	go tool vet .
-	golint .
+	golint $$(go list ./... | grep -v /vendor/)
+
+# go tool vet $$(go list ./... | grep -v /vendor/)
 
 # Run tests
+# Coverage is disabled because of this: https://lk4d4.darth.io/posts/multicover/
+# mkdir -p coverage
+# go test -v -coverprofile=coverage/c.out $$(go list ./... | grep -v /vendor/)
 test:
-	mkdir -p coverage
-	go test -v -coverprofile=coverage/c.out
+	go test -v $$(go list ./... | grep -v /vendor/)
 
 # Create coverage report
 coverage:
@@ -63,4 +70,4 @@ cleanup:
 
 # Run development via docker-compose. This autoreloads/compiles on change etc.
 start:
-	docker-compose up -d
+	docker-compose up
