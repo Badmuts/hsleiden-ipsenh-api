@@ -13,7 +13,7 @@ NC=\033[0m
 .PHONY: coverage
 
 run: start
-suite: install lint test coverage
+suite: install lint test
 package: install compile build
 
 # Install packages
