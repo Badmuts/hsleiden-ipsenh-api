@@ -70,4 +70,4 @@ cleanup:
 
 # Run development via docker-compose. This autoreloads/compiles on change etc.
 start:
-	docker-compose up
+	docker-compose up -d

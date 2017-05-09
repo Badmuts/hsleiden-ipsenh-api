@@ -29,6 +29,7 @@ func NewHubController(router *mux.Router, r *render.Render, db *mgo.Database) *H
 // Register registers the routes with mux.Router
 func (c *HubController) Register() {
 	c.router.HandleFunc("/hubs", c.create).Name("hubs.create").Methods("POST")
+	c.router.HandleFunc("/hubs", c.find).Name("hubs.find").Methods("GET")
 	c.router.HandleFunc("/hubs/{id}", c.findOne).Name("hubs.findOne").Methods("GET")
 }
 
@@ -59,4 +60,16 @@ func (c *HubController) findOne(res http.ResponseWriter, req *http.Request) {
 	}
 
 	c.r.JSON(res, http.StatusOK, hub)
+}
+
+func (c *HubController) find(res http.ResponseWriter, req *http.Request) {
+	hubs := []model.Hub{}
+	err := c.hubs.Find(bson.M{}).Limit(25).All(&hubs)
+
+	if err != nil {
+		c.r.JSON(res, http.StatusInternalServerError, err)
+		log.Fatal(err)
+	}
+
+	c.r.JSON(res, http.StatusOK, hubs)
 }

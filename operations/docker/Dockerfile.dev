@@ -9,10 +9,6 @@ COPY . /go/src/github.com/badmuts/hsleiden-ipsenh-api
 # Download and install any required third party dependencies into the container.
 RUN curl https://glide.sh/get | sh
 RUN glide install
-# Set the PORT environment variable inside the container
-ENV PORT 8080
-# Expose port 3000 to the host so we can access the gin proxy
-EXPOSE 3000
+RUN go get github.com/codegangsta/gin
 # Now tell Docker what command to run when the container starts
-# CMD gin run
-CMD go run main.go
+CMD gin run
