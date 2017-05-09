@@ -23,9 +23,11 @@ lint:
 # go tool vet $$(go list ./... | grep -v /vendor/)
 
 # Run tests
+# Coverage is disabled because of this: https://lk4d4.darth.io/posts/multicover/
+# mkdir -p coverage
+# go test -v -coverprofile=coverage/c.out $$(go list ./... | grep -v /vendor/)
 test:
-	mkdir -p coverage
-	go test -v -coverprofile=coverage/c.out $$(go list ./... | grep -v /vendor/)
+	go test -v $$(go list ./... | grep -v /vendor/)
 
 # Create coverage report
 coverage:
