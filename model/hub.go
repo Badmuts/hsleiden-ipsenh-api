@@ -12,9 +12,8 @@ type Hub struct {
 }
 
 type HubJSON struct {
-	Id      bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	Name    string        `json:"name"`
-	Sensors []Sensor      `json:"sensors"`
+	Hub
+	Sensors []Sensor `json:"sensors"`
 }
 
 func (h *Hub) Sensors(db *mgo.Database) []Sensor {

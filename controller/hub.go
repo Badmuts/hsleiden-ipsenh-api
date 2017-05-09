@@ -59,7 +59,7 @@ func (c *HubController) findOne(res http.ResponseWriter, req *http.Request) {
 		log.Fatal(err)
 	}
 
-	c.r.JSON(res, http.StatusOK, model.HubJSON{hub.Id, hub.Name, hub.Sensors(c.db)})
+	c.r.JSON(res, http.StatusOK, model.HubJSON{hub, hub.Sensors(c.db)})
 }
 
 func (c *HubController) find(res http.ResponseWriter, req *http.Request) {
