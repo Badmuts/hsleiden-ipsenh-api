@@ -1,4 +1,4 @@
-package api
+package model
 
 type Sensor struct {
 	Name       string            `json:"name"`

@@ -1,4 +1,4 @@
-package api
+package model
 
 type Building struct {
 	Name     string       `json:"name"`

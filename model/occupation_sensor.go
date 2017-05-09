@@ -1,4 +1,4 @@
-package api
+package model
 
 type OccupationSensor struct {
 	In_sensor_datapoints  map[int]Datapoint `json:"in_sensor_datapoints"`

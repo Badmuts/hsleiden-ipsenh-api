@@ -31,9 +31,8 @@ lint:
 # mkdir -p coverage
 # go test -v -coverprofile=coverage/c.out $$(go list ./... | grep -v /vendor/)
 test:
-	mkdir -p coverage
 	go test -v $$(go list ./... | grep -v /vendor/)
-	
+
 # Create coverage report
 coverage:
 	go tool cover -html=coverage/c.out -o coverage/coverage.html

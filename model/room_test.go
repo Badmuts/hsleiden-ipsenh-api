@@ -1,16 +1,9 @@
-package api
+package model
 
 import (
 	"fmt"
 	"testing"
 )
-
-type Room struct {
-	Name         string `json:"name"`
-	Size         int    `json:"size"`
-	MAX_CAPACITY int    `json:"max_capacity"`
-	Occupation   int    `json:"occupation"`
-}
 
 func TestCheckIfRoomIsOverOccpupied(t *testing.T) {
 	room := Room{Name: "G3.076", Occupation: 20, MAX_CAPACITY: 30, Size: 20}

@@ -1,4 +1,4 @@
-package api
+package model
 
 type TemperatureSensor struct {
 	Temperature_sensor_datapoints map[int]Datapoint `json:"temperature_sensor_datapoints"`
