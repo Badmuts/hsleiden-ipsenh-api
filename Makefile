@@ -24,7 +24,7 @@ lint:
 # Run tests
 test:
 	mkdir -p coverage
-	go test -v -coverprofile=coverage/c.out
+	go test  -v -coverprofile=coverage/c.out
 
 # Create coverage report
 coverage:

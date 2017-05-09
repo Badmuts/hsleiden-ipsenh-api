@@ -1,4 +1,4 @@
-package test_api
+package main
 
 import (
 	"fmt"
