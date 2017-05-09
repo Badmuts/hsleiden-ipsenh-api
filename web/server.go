@@ -20,7 +20,7 @@ func NewServer() *Server {
 	db := db.Connect()
 
 	controller.NewHealthController(router, r)
-	controller.NewRegisterController(router, r, db)
+	controller.NewHubController(router, r, db)
 
 	server := Server{negroni.Classic()}
 	server.UseHandler(router)
