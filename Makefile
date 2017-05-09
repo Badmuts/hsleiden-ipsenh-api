@@ -13,8 +13,12 @@ NC=\033[0m
 .PHONY: coverage
 
 run: start
-suite: lint test coverage
-package: compile build
+suite: install lint test coverage
+package: install compile build
+
+# Install packages
+install:
+	glide install
 
 # Run linters, simple code quality check
 lint:
