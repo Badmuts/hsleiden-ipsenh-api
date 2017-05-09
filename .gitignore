@@ -27,3 +27,5 @@ coverage/
 hsleiden-ipsenh-api
 .DS_Store
 vendor/
+
+.idea/
