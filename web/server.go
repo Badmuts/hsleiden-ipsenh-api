@@ -18,6 +18,7 @@ func NewServer() *Server {
 	router := mux.NewRouter()
 
 	controller.NewHealthController(router, r)
+	controller.NewGPIORevisionController(router, r)
 
 	server := Server{negroni.Classic()}
 	server.UseHandler(router)
