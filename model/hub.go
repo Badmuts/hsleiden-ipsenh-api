@@ -18,7 +18,8 @@ type HubJSON struct {
 
 func (h *Hub) Sensors(db *mgo.Database) []Sensor {
 	if h.sensors == nil {
-		return GetSensorsByHubId(h.Id.Hex(), db)
+		h.sensors = GetSensorsByHubId(h.Id.Hex(), db)
+		return h.sensors
 	}
 	return h.sensors
 }
