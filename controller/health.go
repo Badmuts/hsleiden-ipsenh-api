@@ -22,7 +22,7 @@ func NewHealthController(router *mux.Router, r *render.Render) *HealthController
 
 // Register registers the routes with mux.Router
 func (c *HealthController) Register() {
-	c.router.HandleFunc("/healthz", c.healthz)
+	c.router.HandleFunc("/healthz", c.healthz).Name("/healthz")
 }
 
 func (c *HealthController) healthz(res http.ResponseWriter, req *http.Request) {
