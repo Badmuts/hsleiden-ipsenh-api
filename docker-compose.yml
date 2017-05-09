@@ -11,3 +11,9 @@ services:
       - PORT=8080
     volumes: 
       - ".:/go/src/github.com/badmuts/hsleiden-ipsenh-api"
+    
+  db:
+    image: mongo:3.4
+    ports:
+      - "27017:27017"
+      

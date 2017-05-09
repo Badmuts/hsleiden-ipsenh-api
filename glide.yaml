@@ -7,3 +7,4 @@ import:
 - package: github.com/urfave/negroni
   version: ^0.2.0
 - package: github.com/unrolled/render
+- package: gopkg.in/mgo.v2
