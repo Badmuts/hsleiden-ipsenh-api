@@ -39,7 +39,7 @@ func (c *HubController) create(res http.ResponseWriter, req *http.Request) {
 	dec := json.NewDecoder(req.Body)
 	dec.Decode(&newHub)
 
-	newHub.Id = bson.NewObjectId()
+	newHub.ID = bson.NewObjectId()
 	err := c.hubs.Insert(&newHub)
 
 	if err != nil {
@@ -65,6 +65,7 @@ func (c *HubController) findOne(res http.ResponseWriter, req *http.Request) {
 
 func (c *HubController) find(res http.ResponseWriter, req *http.Request) {
 	hubs := []model.Hub{}
+	hubsJ := []model.HubJSON{}
 	err := c.hubs.Find(bson.M{}).Limit(25).All(&hubs)
 
 	if err != nil {
@@ -72,5 +73,10 @@ func (c *HubController) find(res http.ResponseWriter, req *http.Request) {
 		log.Fatal(err)
 	}
 
-	c.r.JSON(res, http.StatusOK, hubs)
+	// populate relationship
+	for _, hub := range hubs {
+		hubsJ = append(hubsJ, model.HubJSON{hub, hub.Sensors(c.db)})
+	}
+
+	c.r.JSON(res, http.StatusOK, hubsJ)
 }
