@@ -39,6 +39,7 @@ func (c *HubController) create(res http.ResponseWriter, req *http.Request) {
 	dec := json.NewDecoder(req.Body)
 	dec.Decode(&newHub)
 
+	newHub.Id = bson.NewObjectId()
 	err := c.hubs.Insert(&newHub)
 
 	if err != nil {
