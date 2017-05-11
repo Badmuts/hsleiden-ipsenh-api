@@ -71,8 +71,8 @@ func (ctrl *HubController) find(res http.ResponseWriter, req *http.Request) {
 	hubs, _ := ctrl.Hub.Find()
 	hubsJ := []model.HubJSON{}
 
-	for _, hub := range hubs {
-		hubJ, _ := hub.JSON()
+	for index, _ := range hubs {
+		hubJ, _ := hubs[index].JSON()
 		hubsJ = append(hubsJ, hubJ)
 	}
 

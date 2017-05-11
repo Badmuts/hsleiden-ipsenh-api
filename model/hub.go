@@ -72,5 +72,6 @@ func (h *Hub) FindByID(ID string) (hub Hub, err error) {
 		return hub, errors.New("Not a valid objectId")
 	}
 	err = h.db.C("hub").FindId(bson.ObjectIdHex(ID)).One(&hub)
+	hub.db = h.db
 	return hub, err
 }
