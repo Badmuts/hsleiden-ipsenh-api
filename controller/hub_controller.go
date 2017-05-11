@@ -57,24 +57,17 @@ func (ctrl *HubController) findOne(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	hJSON, err := hub.JSON()
-	if err != nil {
-		ctrl.r.JSON(res, http.StatusInternalServerError, err)
-		log.Fatal(err)
-		return
-	}
+	hub.Sensors, _ = hub.GetSensors()
 
-	ctrl.r.JSON(res, http.StatusOK, hJSON)
+	ctrl.r.JSON(res, http.StatusOK, hub)
 }
 
 func (ctrl *HubController) find(res http.ResponseWriter, req *http.Request) {
 	hubs, _ := ctrl.Hub.Find()
-	hubsJ := []model.HubJSON{}
 
 	for index, _ := range hubs {
-		hubJ, _ := hubs[index].JSON()
-		hubsJ = append(hubsJ, hubJ)
+		hubs[index].Sensors, _ = hubs[index].GetSensors()
 	}
 
-	ctrl.r.JSON(res, http.StatusOK, hubsJ)
+	ctrl.r.JSON(res, http.StatusOK, hubs)
 }
