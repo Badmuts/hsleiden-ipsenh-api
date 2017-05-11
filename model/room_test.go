@@ -12,8 +12,6 @@ func TestCheckIfRoomIsOverOccpupied(t *testing.T) {
 		fmt.Println("Name: ", room.Name, "Occupation: ", room.Occupation, "Max Capacity: ", room.maxCapacity)
 		fmt.Println("Too many students in this room")
 		t.Fail()
-	} else {
-		fmt.Println("TEST PASSED!")
 	}
 
 }

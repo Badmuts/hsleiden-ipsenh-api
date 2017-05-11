@@ -9,7 +9,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
 	"gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
 )
 
 // HubController represents the controller instance
@@ -18,65 +17,64 @@ type HubController struct {
 	r      *render.Render
 	hubs   *mgo.Collection
 	db     *mgo.Database
+	Hub    *model.Hub
 }
 
 // NewHubController creates the controller
 func NewHubController(router *mux.Router, r *render.Render, db *mgo.Database) *HubController {
-	ctrl := &HubController{router, r, db.C("hub"), db}
+	ctrl := &HubController{router, r, db.C("hub"), db, model.HubModel(db)}
 	ctrl.Register()
 	return ctrl
 }
 
 // Register registers the routes with mux.Router
-func (c *HubController) Register() {
-	c.router.HandleFunc("/hubs", c.create).Name("hubs.create").Methods("POST")
-	c.router.HandleFunc("/hubs", c.find).Name("hubs.find").Methods("GET")
-	c.router.HandleFunc("/hubs/{id}", c.findOne).Name("hubs.findOne").Methods("GET")
+func (ctrl *HubController) Register() {
+	ctrl.router.HandleFunc("/hubs", ctrl.create).Name("hubs.create").Methods("POST")
+	ctrl.router.HandleFunc("/hubs", ctrl.find).Name("hubs.find").Methods("GET")
+	ctrl.router.HandleFunc("/hubs/{id}", ctrl.findOne).Name("hubs.findOne").Methods("GET")
 }
 
-func (c *HubController) create(res http.ResponseWriter, req *http.Request) {
-	var newHub model.Hub
+func (ctrl *HubController) create(res http.ResponseWriter, req *http.Request) {
+	newHub := model.HubModel(ctrl.db)
 	dec := json.NewDecoder(req.Body)
-	dec.Decode(&newHub)
+	err := dec.Decode(&newHub)
 
-	newHub.ID = bson.NewObjectId()
-	err := c.hubs.Insert(&newHub)
+	_, err = newHub.Save()
 
 	if err != nil {
-		c.r.JSON(res, http.StatusInternalServerError, err)
+		ctrl.r.JSON(res, http.StatusInternalServerError, err)
 		log.Fatal(err)
 	}
 
-	c.r.JSON(res, http.StatusCreated, newHub)
+	ctrl.r.JSON(res, http.StatusCreated, newHub)
 }
 
-func (c *HubController) findOne(res http.ResponseWriter, req *http.Request) {
-	id := mux.Vars(req)["id"]
-	hub := model.Hub{}
-
-	err := c.hubs.FindId(bson.ObjectIdHex(id)).One(&hub)
-	if err != nil {
-		c.r.JSON(res, http.StatusInternalServerError, err)
-		log.Fatal(err)
+func (ctrl *HubController) findOne(res http.ResponseWriter, req *http.Request) {
+	ID := mux.Vars(req)["id"]
+	hub, err := ctrl.Hub.FindByID(ID)
+	if err == mgo.ErrNotFound || err != nil {
+		ctrl.r.JSON(res, http.StatusNotFound, hub)
+		return
 	}
 
-	c.r.JSON(res, http.StatusOK, model.HubJSON{hub, hub.Sensors(c.db)})
+	hJSON, err := hub.JSON()
+	if err != nil {
+		ctrl.r.JSON(res, http.StatusInternalServerError, err)
+		log.Fatal(err)
+		return
+	}
+
+	ctrl.r.JSON(res, http.StatusOK, hJSON)
 }
 
-func (c *HubController) find(res http.ResponseWriter, req *http.Request) {
-	hubs := []model.Hub{}
+func (ctrl *HubController) find(res http.ResponseWriter, req *http.Request) {
+	hubs, _ := ctrl.Hub.Find()
 	hubsJ := []model.HubJSON{}
-	err := c.hubs.Find(bson.M{}).Limit(25).All(&hubs)
 
-	if err != nil {
-		c.r.JSON(res, http.StatusInternalServerError, err)
-		log.Fatal(err)
+	for index, _ := range hubs {
+		hubJ, _ := hubs[index].JSON()
+		hubsJ = append(hubsJ, hubJ)
 	}
 
-	// populate relationship
-	for _, hub := range hubs {
-		hubsJ = append(hubsJ, model.HubJSON{hub, hub.Sensors(c.db)})
-	}
-
-	c.r.JSON(res, http.StatusOK, hubsJ)
+	ctrl.r.JSON(res, http.StatusOK, hubsJ)
 }
