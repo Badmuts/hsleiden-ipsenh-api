@@ -19,9 +19,3 @@ type SensorJSON struct {
 	Sensor
 	Hub *Hub `json:"hub"`
 }
-
-// Hub returns the Hub that has a relationship with this sensor.
-// func (s *Sensor) Hub(db *mgo.Database) *Hub {
-// 	s.hub = GetHubBySensorID(s.ID.Hex(), db)
-// 	return s.hub
-// }
