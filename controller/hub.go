@@ -39,7 +39,7 @@ func (ctrl *HubController) create(res http.ResponseWriter, req *http.Request) {
 	dec := json.NewDecoder(req.Body)
 	err := dec.Decode(&newHub)
 
-	_, err = newHub.Save(ctrl.db)
+	_, err = newHub.Save()
 
 	if err != nil {
 		ctrl.r.JSON(res, http.StatusInternalServerError, err)
@@ -51,13 +51,13 @@ func (ctrl *HubController) create(res http.ResponseWriter, req *http.Request) {
 
 func (ctrl *HubController) findOne(res http.ResponseWriter, req *http.Request) {
 	ID := mux.Vars(req)["id"]
-	hub, err := ctrl.Hub.FindByID(ctrl.db, ID)
+	hub, err := ctrl.Hub.FindByID(ID)
 	if err == mgo.ErrNotFound || err != nil {
 		ctrl.r.JSON(res, http.StatusNotFound, hub)
 		return
 	}
 
-	hJSON, err := hub.JSON(ctrl.db)
+	hJSON, err := hub.JSON()
 	if err != nil {
 		ctrl.r.JSON(res, http.StatusInternalServerError, err)
 		log.Fatal(err)
@@ -68,11 +68,11 @@ func (ctrl *HubController) findOne(res http.ResponseWriter, req *http.Request) {
 }
 
 func (ctrl *HubController) find(res http.ResponseWriter, req *http.Request) {
-	hubs, _ := ctrl.Hub.Find(ctrl.db)
+	hubs, _ := ctrl.Hub.Find()
 	hubsJ := []model.HubJSON{}
 
 	for _, hub := range hubs {
-		hubJ, _ := hub.JSON(ctrl.db)
+		hubJ, _ := hub.JSON()
 		hubsJ = append(hubsJ, hubJ)
 	}
 
