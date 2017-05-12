@@ -5,13 +5,13 @@ import (
 )
 
 type Sensor struct {
-	ID         bson.ObjectId     `json:"id,omitempty" bson:"_id,omitempty"`
-	Name       string            `json:"name,omitempty" bson:"name"`
-	SensorType string            `json:"sensorType,omitempty" bson:"sensorType"`
-	Status     bool              `json:"status,omitempty" bson:"status"`
-	UUID       int               `json:"UUID,omitempty" bson:"UUID"`
-	Datapoints map[int]Datapoint `json:"datapoints,omitempty" bson:"datapoints"`
-	HubID      bson.ObjectId     `json:"-" bson:"hub"`
+	ID         bson.ObjectId `json:"id,omitempty" bson:"_id,omitempty"`
+	Name       string        `json:"name,omitempty" bson:"name"`
+	SensorType string        `json:"sensorType,omitempty" bson:"sensorType"`
+	Status     bool          `json:"status,omitempty" bson:"status"`
+	UUID       int           `json:"UUID,omitempty" bson:"UUID"`
+	Datapoints []Datapoint   `json:"datapoints,omitempty" bson:"datapoints"`
+	HubID      bson.ObjectId `json:"-" bson:"hub"`
 	hub        *Hub
 }
 
