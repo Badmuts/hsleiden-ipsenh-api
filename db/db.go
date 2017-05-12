@@ -1,6 +1,7 @@
 package db
 
 import (
+	"log"
 	"os"
 
 	mgo "gopkg.in/mgo.v2"
@@ -17,6 +18,12 @@ func Connect() *mgo.Database {
 	if db == "" {
 		db = "ipsenh"
 	}
+
+	mgo.SetDebug(true)
+
+	var aLogger *log.Logger
+	aLogger = log.New(os.Stderr, "", log.LstdFlags)
+	mgo.SetLogger(aLogger)
 
 	session, err := mgo.Dial(host)
 	if err != nil {
