@@ -10,10 +10,10 @@ import (
 
 type Datapoint struct {
 	ID        bson.ObjectId `json:"id,omitempty" bson:"_id"`
-	Sensor    *Sensor       `json:"sensor"`
+	Sensor    *Sensor       `json:"sensor" bson:"-"`
 	SensorID  bson.ObjectId `json:"-" bson:"sensor"`
-	Key       int           `json:"key,omitempty" bson:"key"`
-	Value     float32       `json:"value,omitempty" bson:"value"`
+	Key       string        `json:"key,omitempty" bson:"key"`
+	Value     []string      `json:"value,omitempty" bson:"value"`
 	Timestamp int64         `json:"timestamp" bson:"timestamp"`
 	db        *mgo.Database
 }
@@ -31,11 +31,9 @@ func (d *Datapoint) Save() (info *mgo.ChangeInfo, err error) {
 		d.ID = bson.NewObjectId()
 	}
 
-	// Set HubID for each Sensor
-	// @todo this should not be here
-	d.Sensor.ID = bson.NewObjectId()
-	d.SensorID = d.Sensor.ID
-	d.db.C("sensor").Upsert(d.Sensor, d.Sensor)
+	d.SensorID = bson.ObjectIdHex("5915a9e7932c2b024d18561e")
+
+	//get sensor and save datapoint to sensor in DB
 
 	info, err = d.db.C("datapoint").Upsert(d, d)
 	if err != nil {
@@ -53,7 +51,7 @@ func (d *Datapoint) Remove(ID string) error {
 // Datapoint retrieves the associated sensor from this d
 func (d *Datapoint) GetSensor() (sensor *Sensor, err error) {
 	sensor = &Sensor{}
-	err = d.db.C("sensor").Find(bson.M{"_id": bson.ObjectIdHex("fewf")}).One(&sensor)
+	err = d.db.C("sensor").FindId(d.SensorID).One(&sensor)
 	d.Sensor = sensor
 
 	log.Printf("datapoint: %s", d.SensorID)
