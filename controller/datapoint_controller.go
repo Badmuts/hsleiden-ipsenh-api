@@ -25,7 +25,6 @@ type DatapointController struct {
 type datapoints struct {
 	SensorID   bson.ObjectId     `json:"sensor_id"`
 	Datapoints []model.Datapoint `json:"data"`
-	db         *mgo.Database
 }
 
 // NewDatapointController creates the controller
@@ -45,20 +44,14 @@ func (ctrl *DatapointController) create(res http.ResponseWriter, req *http.Reque
 	// dec := json.NewDecoder(req.Body)
 	// err := dec.Decode(&newDatapoints)
 	body, err := ioutil.ReadAll(req.Body)
-	er := json.Unmarshal(body, &newDatapoints)
-	if er != nil {
-		panic(er)
-	}
+	err = json.Unmarshal(body, &newDatapoints)
 
 	// log.Printf("datapoints data %s", newDatapoints.Datapoints)
 	for index := range newDatapoints {
 		for i := range newDatapoints[index].Datapoints {
-			dp := *model.DatapointModel(ctrl.db)
-			dp.SensorID = newDatapoints[index].SensorID
-			dp.Key = newDatapoints[index].Datapoints[i].Key
-			dp.Value = newDatapoints[index].Datapoints[i].Value
-			dp.Timestamp = newDatapoints[index].Datapoints[i].Timestamp
-			_, err = dp.Save()
+			newDatapoints[index].Datapoints[i].DB = ctrl.db
+			newDatapoints[index].Datapoints[i].SensorID = newDatapoints[index].SensorID
+			newDatapoints[index].Datapoints[i].Save()
 		}
 	}
 	// _, err = newDatapoint.Save()

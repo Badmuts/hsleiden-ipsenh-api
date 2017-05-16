@@ -11,13 +11,13 @@ type Datapoint struct {
 	Key       string        `json:"key" bson:"key"`
 	Value     float64       `json:"value" bson:"value"`
 	Timestamp int64         `json:"timestamp" bson:"timestamp"`
-	db        *mgo.Database
+	DB        *mgo.Database `json:"-" bson:"-"`
 }
 
 // HubModel creates a Hub which can be used to query the db
 func DatapointModel(db *mgo.Database) *Datapoint {
 	datapoint := new(Datapoint)
-	datapoint.db = db
+	datapoint.DB = db
 	return datapoint
 }
 
@@ -27,7 +27,7 @@ func (d *Datapoint) Save() (info *mgo.ChangeInfo, err error) {
 		d.ID = bson.NewObjectId()
 	}
 
-	info, err = d.db.C("datapoint").Upsert(d, d)
+	info, err = d.DB.C("datapoint").Upsert(d, d)
 	if err != nil {
 		return info, err
 	}
@@ -37,7 +37,7 @@ func (d *Datapoint) Save() (info *mgo.ChangeInfo, err error) {
 
 // Remove removes d from the database
 func (d *Datapoint) Remove(ID string) error {
-	return d.db.C("datapoint").Remove(d)
+	return d.DB.C("datapoint").Remove(d)
 }
 
 func BulkSaveDatapoints(db *mgo.Database, datapoints []Datapoint) (savedDatapoints []Datapoint, err error) {
