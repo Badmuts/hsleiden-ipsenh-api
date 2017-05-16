@@ -7,7 +7,7 @@ import (
 
 type Datapoint struct {
 	ID        bson.ObjectId `json:"id" bson:"_id"`
-	SensorID  bson.ObjectId `json:"-" bson:"sensor"`
+	SensorID  bson.ObjectId `json:"sensor_id" bson:"sensor"`
 	Key       string        `json:"key" bson:"key"`
 	Value     float64       `json:"value" bson:"value"`
 	Timestamp int64         `json:"timestamp" bson:"timestamp"`

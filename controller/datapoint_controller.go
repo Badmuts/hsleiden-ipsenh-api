@@ -46,12 +46,14 @@ func (ctrl *DatapointController) create(res http.ResponseWriter, req *http.Reque
 	body, err := ioutil.ReadAll(req.Body)
 	err = json.Unmarshal(body, &newDatapoints)
 
+	returnedDatapoints := []model.Datapoint{}
 	// log.Printf("datapoints data %s", newDatapoints.Datapoints)
 	for index := range newDatapoints {
 		for i := range newDatapoints[index].Datapoints {
 			newDatapoints[index].Datapoints[i].DB = ctrl.db
 			newDatapoints[index].Datapoints[i].SensorID = newDatapoints[index].SensorID
 			newDatapoints[index].Datapoints[i].Save()
+			returnedDatapoints = append(returnedDatapoints, newDatapoints[index].Datapoints[i])
 		}
 	}
 	// _, err = newDatapoint.Save()
@@ -61,5 +63,5 @@ func (ctrl *DatapointController) create(res http.ResponseWriter, req *http.Reque
 		log.Fatal(err)
 	}
 
-	ctrl.r.JSON(res, http.StatusCreated, newDatapoints)
+	ctrl.r.JSON(res, http.StatusCreated, returnedDatapoints)
 }
