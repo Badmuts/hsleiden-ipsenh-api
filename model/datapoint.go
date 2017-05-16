@@ -27,10 +27,6 @@ func (d *Datapoint) Save() (info *mgo.ChangeInfo, err error) {
 		d.ID = bson.NewObjectId()
 	}
 
-	d.SensorID = bson.ObjectIdHex("5915a9e7932c2b024d18561e")
-
-	//get sensor and save datapoint to sensor in DB
-
 	info, err = d.db.C("datapoint").Upsert(d, d)
 	if err != nil {
 		return info, err
