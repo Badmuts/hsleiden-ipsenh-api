@@ -41,13 +41,14 @@ func (ctrl *DatapointController) Register() {
 
 func (ctrl *DatapointController) create(res http.ResponseWriter, req *http.Request) {
 	newDatapoints := []datapoints{}
-	// dec := json.NewDecoder(req.Body)
-	// err := dec.Decode(&newDatapoints)
 	body, err := ioutil.ReadAll(req.Body)
-	err = json.Unmarshal(body, &newDatapoints)
+	er := json.Unmarshal(body, &newDatapoints)
+
+	if er != nil {
+		log.Fatal(er)
+	}
 
 	returnedDatapoints := []model.Datapoint{}
-	// log.Printf("datapoints data %s", newDatapoints.Datapoints)
 	for index := range newDatapoints {
 		for i := range newDatapoints[index].Datapoints {
 			newDatapoints[index].Datapoints[i].DB = ctrl.db
@@ -56,7 +57,6 @@ func (ctrl *DatapointController) create(res http.ResponseWriter, req *http.Reque
 			returnedDatapoints = append(returnedDatapoints, newDatapoints[index].Datapoints[i])
 		}
 	}
-	// _, err = newDatapoint.Save()
 
 	if err != nil {
 		ctrl.r.JSON(res, http.StatusInternalServerError, err)
