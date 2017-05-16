@@ -16,16 +16,4 @@ func TestDatapointController(t *testing.T) {
 	if router.Get("datapoints.create") == nil {
 		t.Errorf("No datapoints.create endpoint registered")
 	}
-
-	if router.Get("datapoints.find") == nil {
-		t.Errorf("No datapoints.find endpoint registered")
-	}
-
-	if router.Get("datapoints.findOne") == nil {
-		t.Errorf("No datapoints.findOne endpoint registered")
-	}
-
-	if router.Get("datapoints.findOne") == nil {
-		t.Errorf("No datapoints.findOne endpoint registered")
-	}
 }
