@@ -1,7 +1,39 @@
 package model
 
+import (
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+)
+
 type Building struct {
-	Name     string       `json:"name"`
-	Rooms    map[int]Room `json:"rooms"`
-	Location string       `json:"location"`
+	ID        bson.ObjectId   `json:"id" bson:"_id"`
+	Name      string          `json:"name" bson:"name"`
+	RoomIDs   []bson.ObjectId `json:"-" bson:"rooms"`
+	Location  string          `json:"location"`
+	db        *mgo.Database
+	buildings *mgo.Collection
+}
+
+func NewBuildingModel(db *mgo.Database) *Building {
+	building := new(Building)
+	building.db = db
+	building.buildings = db.C("building")
+	return building
+}
+
+func (b *Building) Save() (building *Building, err error) {
+	if b.ID == "" {
+		b.ID = bson.NewObjectId()
+	}
+
+	_, err = b.buildings.Upsert(b, b)
+	return b, err
+}
+
+func (b *Building) FindId(ID bson.ObjectId) *Building {
+	building := NewBuildingModel(b.db)
+	b.buildings.FindId(ID).One(&building)
+	building.db = b.db
+	building.buildings = b.db.C("building")
+	return building
 }
