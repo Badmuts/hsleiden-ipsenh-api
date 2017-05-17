@@ -22,8 +22,11 @@ func SetOccupationSensor() *OccupationSensor {
 
 func CalculateOccupation(occupationSensor *OccupationSensor) {
 	total_exits := occupationSensor.CalculateExits()
+	total_entrances := occupationSensor.CalculateEntrances()
 
 	log.Printf("Total exits: %s", total_exits)
+	log.Printf("Total entrances: %s", total_entrances)
+
 }
 
 func CreateDummyDatapointsIn() []*Datapoint {

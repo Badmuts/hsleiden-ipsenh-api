@@ -11,27 +11,61 @@ type OccupationSensor struct {
 func (o *OccupationSensor) CalculateExits() int {
 
 	triggeredOut := false
-	triggeredIn := false
+	// triggeredIn := false
 
 	exits := 0
 	for index := range o.OutSensorDatapoints {
+		if index == 0 {
+			continue
+		}
+
 		if o.OutSensorDatapoints[index].Value != o.OutSensorDatapoints[index-1].Value {
 			triggeredOut = true
 		}
-		if o.InSensorDatapoints[index].Value != o.InSensorDatapoints[index].Value {
-			triggeredIn = true
-		}
+		// if o.InSensorDatapoints[index].Value != o.InSensorDatapoints[index].Value {
+		// 	triggeredIn = true
+		// }
 
-		if triggeredIn && triggeredOut {
+		if triggeredOut {
 			triggeredOut = false
-			triggeredIn = false
+			// triggeredIn = false
 			exits++
 		}
+		index++
 	}
 
 	return exits
 }
 
-// func (o *OccupationSensor) CalculateEntrances() int {
+func (o *OccupationSensor) CalculateEntrances() int {
+	triggeredIn := false
+	// triggeredOut := false
 
-// }
+	entrances := 0
+	for index := range o.InSensorDatapoints {
+		if index == 0 {
+			continue
+		}
+
+		if o.InSensorDatapoints[index].Value != o.InSensorDatapoints[index-1].Value {
+			triggeredIn = true
+		}
+
+		// if o.OutSensorDatapoints[index].Value != o.OutSensorDatapoints[index-1].Value {
+		// 	triggeredOut = true
+		// }
+
+		if triggeredIn {
+			triggeredIn = false
+			//triggeredOut = false
+			entrances++
+		}
+		index++
+	}
+
+	return entrances
+}
+
+func (o *OccupationSensor) CalculateCurrentOccupants() {
+
+}
