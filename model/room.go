@@ -2,6 +2,7 @@ package model
 
 import "gopkg.in/mgo.v2/bson"
 import "gopkg.in/mgo.v2"
+import "log"
 
 type Room struct {
 	ID          bson.ObjectId `json:"id" bson:"_id"`
@@ -30,14 +31,26 @@ func (r *Room) Save() (room *Room, err error) {
 	}
 
 	_, err = r.rooms.Upsert(r, r)
+	if err != nil {
+		log.Fatal("Cannot upsert room", err)
+		return nil, err
+	}
 
 	// Todo: save building relation
 	building := NewBuildingModel(r.db).FindId(r.BuildingID)
-	if building.RoomIDs == nil {
-		building.RoomIDs = []bson.ObjectId{}
-	}
 	building.RoomIDs = append(building.RoomIDs, r.ID)
-	building.Save()
+
+	log.Printf("building", building)
+	log.Printf("rooms", building.RoomIDs)
+
+	building, err = building.Save()
+	if err != nil {
+		log.Fatal("Cannot upsert building", err)
+		return nil, err
+	}
+
+	log.Printf("saved building", building)
+	log.Printf("saved building", building.RoomIDs)
 
 	return r, err
 }

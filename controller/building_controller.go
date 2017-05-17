@@ -68,6 +68,7 @@ func (ctrl *BuildingController) CreateRoom(res http.ResponseWriter, req *http.Re
 	Room, err = Room.Save()
 	if err != nil {
 		ctrl.r.JSON(res, http.StatusInternalServerError, errors.New("Could not save room"))
+		return
 	}
 
 	ctrl.r.JSON(res, http.StatusCreated, Room)

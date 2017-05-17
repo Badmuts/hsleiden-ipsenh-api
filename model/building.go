@@ -24,9 +24,10 @@ func NewBuildingModel(db *mgo.Database) *Building {
 func (b *Building) Save() (building *Building, err error) {
 	if b.ID == "" {
 		b.ID = bson.NewObjectId()
+		err = b.buildings.Insert(b)
+	} else {
+		err = b.buildings.UpdateId(b.ID, b)
 	}
-
-	_, err = b.buildings.Upsert(b, b)
 	return b, err
 }
 
