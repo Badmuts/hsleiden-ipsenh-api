@@ -8,8 +8,9 @@ import (
 type Building struct {
 	ID        bson.ObjectId   `json:"id" bson:"_id"`
 	Name      string          `json:"name" bson:"name"`
-	RoomIDs   []bson.ObjectId `json:"-" bson:"rooms"`
 	Location  string          `json:"location"`
+	Rooms     []Room          `json:"rooms,omitempty" bson:"-"`
+	RoomIDs   []bson.ObjectId `json:"-" bson:"rooms"`
 	db        *mgo.Database
 	buildings *mgo.Collection
 }
@@ -29,6 +30,18 @@ func (b *Building) Save() (building *Building, err error) {
 		err = b.buildings.UpdateId(b.ID, b)
 	}
 	return b, err
+}
+
+func (b *Building) Find() (buildings []Building, err error) {
+	err = b.buildings.Find(bson.M{}).Limit(25).All(&buildings)
+
+	for index := range buildings {
+		buildings[index].db = b.db
+		buildings[index].buildings = b.buildings
+		buildings[index].Rooms, _ = buildings[index].GetRooms()
+	}
+
+	return buildings, err
 }
 
 func (b *Building) FindId(ID bson.ObjectId) *Building {
