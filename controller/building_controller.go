@@ -6,6 +6,8 @@ import (
 
 	"errors"
 
+	"log"
+
 	"github.com/badmuts/hsleiden-ipsenh-api/model"
 	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
@@ -32,6 +34,7 @@ func NewBuildingController(router *mux.Router, r *render.Render, db *mgo.Databas
 func (ctrl *BuildingController) Register() {
 	ctrl.router.HandleFunc("/buildings", ctrl.CreateBuilding).Name("buildings.create").Methods("POST")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms", ctrl.CreateRoom).Name("buildings.rooms.create").Methods("POST")
+	ctrl.router.HandleFunc("/buildings/{id}/rooms", ctrl.FindRooms).Name("buildings.rooms.find").Methods("GET")
 }
 
 func (ctrl *BuildingController) CreateBuilding(res http.ResponseWriter, req *http.Request) {
@@ -72,4 +75,19 @@ func (ctrl *BuildingController) CreateRoom(res http.ResponseWriter, req *http.Re
 	}
 
 	ctrl.r.JSON(res, http.StatusCreated, Room)
+}
+
+func (ctrl *BuildingController) FindRooms(res http.ResponseWriter, req *http.Request) {
+	buildingID := bson.ObjectIdHex(mux.Vars(req)["id"])
+	building := model.NewBuildingModel(ctrl.db)
+	building = building.FindId(buildingID)
+
+	rooms, err := building.GetRooms()
+	if err != nil {
+		log.Fatal("Could not find rooms", err)
+		ctrl.r.JSON(res, http.StatusNotFound, rooms)
+		return
+	}
+
+	ctrl.r.JSON(res, http.StatusOK, rooms)
 }

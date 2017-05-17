@@ -38,3 +38,9 @@ func (b *Building) FindId(ID bson.ObjectId) *Building {
 	building.buildings = b.db.C("building")
 	return building
 }
+
+func (b *Building) GetRooms() (rooms []Room, err error) {
+	rooms = make([]Room, 0)
+	err = b.db.C("room").Find(bson.M{"_id": bson.M{"$in": b.RoomIDs}}).All(&rooms)
+	return rooms, err
+}
