@@ -11,7 +11,7 @@ type OccupationSensor struct {
 func (o *OccupationSensor) CalculateExits() int {
 
 	triggeredOut := false
-	// triggeredIn := false
+	triggeredIn := false
 
 	exits := 0
 	for index := range o.OutSensorDatapoints {
@@ -19,16 +19,18 @@ func (o *OccupationSensor) CalculateExits() int {
 			continue
 		}
 
+		//Hier moet nog een marge bijkomen van een bepaalde lengte omdat de standaard
+		//meting van de deurpost niet altijd gelijk is
 		if o.OutSensorDatapoints[index].Value != o.OutSensorDatapoints[index-1].Value {
 			triggeredOut = true
 		}
-		// if o.InSensorDatapoints[index].Value != o.InSensorDatapoints[index].Value {
-		// 	triggeredIn = true
-		// }
+		if o.InSensorDatapoints[index].Value != o.InSensorDatapoints[index-1].Value {
+			triggeredIn = true
+		}
 
-		if triggeredOut {
+		if triggeredOut && triggeredIn {
 			triggeredOut = false
-			// triggeredIn = false
+			triggeredIn = false
 			exits++
 		}
 		index++
@@ -39,7 +41,7 @@ func (o *OccupationSensor) CalculateExits() int {
 
 func (o *OccupationSensor) CalculateEntrances() int {
 	triggeredIn := false
-	// triggeredOut := false
+	triggeredOut := false
 
 	entrances := 0
 	for index := range o.InSensorDatapoints {
@@ -51,13 +53,13 @@ func (o *OccupationSensor) CalculateEntrances() int {
 			triggeredIn = true
 		}
 
-		// if o.OutSensorDatapoints[index].Value != o.OutSensorDatapoints[index-1].Value {
-		// 	triggeredOut = true
-		// }
+		if o.OutSensorDatapoints[index].Value != o.OutSensorDatapoints[index-1].Value {
+			triggeredOut = true
+		}
 
-		if triggeredIn {
+		if triggeredIn && triggeredOut {
 			triggeredIn = false
-			//triggeredOut = false
+			triggeredOut = false
 			entrances++
 		}
 		index++
