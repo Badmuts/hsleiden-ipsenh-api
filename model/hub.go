@@ -3,8 +3,6 @@ package model
 import (
 	"errors"
 
-	"log"
-
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -58,11 +56,6 @@ func (h *Hub) GetSensors() (sensors []Sensor, err error) {
 	sensors = []Sensor{}
 	err = h.db.C("sensor").Find(bson.M{"_id": bson.M{"$in": h.SensorIDS}}).All(&sensors)
 	h.Sensors = sensors
-
-	log.Printf("hub: %s", h.SensorIDS)
-	log.Printf("found sensors: %s", len(sensors))
-	log.Printf("Sensors: %s", len(h.Sensors))
-
 	return sensors, err
 }
 
