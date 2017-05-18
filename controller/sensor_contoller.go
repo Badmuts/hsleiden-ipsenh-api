@@ -42,9 +42,6 @@ func (ctrl *SensorController) CreateDatapoints(res http.ResponseWriter, req *htt
 	dec, _ := ioutil.ReadAll(req.Body)
 	err := json.Unmarshal(dec, &datapoints)
 
-	log.Printf("sensorID: %s", sensorID)
-	log.Printf("datapoints len: %s", len(datapoints))
-
 	// save datapoints
 	for index := range datapoints {
 		datapoints[index].SensorID = bson.ObjectIdHex(sensorID)
