@@ -34,8 +34,10 @@ func NewBuildingController(router *mux.Router, r *render.Render, db *mgo.Databas
 func (ctrl *BuildingController) Register() {
 	ctrl.router.HandleFunc("/buildings", ctrl.FindBuilding).Name("buildings.find").Methods("GET")
 	ctrl.router.HandleFunc("/buildings", ctrl.CreateBuilding).Name("buildings.create").Methods("POST")
+	ctrl.router.HandleFunc("/buildings/{id}", ctrl.FindBuildingId).Name("buildings.findId").Methods("GET")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms", ctrl.CreateRoom).Name("buildings.rooms.create").Methods("POST")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms", ctrl.FindRooms).Name("buildings.rooms.find").Methods("GET")
+	ctrl.router.HandleFunc("/buildings/{id}/rooms/{roomID}", ctrl.FindRoomID).Name("rooms.findId").Methods("GET")
 }
 
 func (ctrl *BuildingController) FindBuilding(res http.ResponseWriter, req *http.Request) {
@@ -105,4 +107,27 @@ func (ctrl *BuildingController) FindRooms(res http.ResponseWriter, req *http.Req
 	}
 
 	ctrl.r.JSON(res, http.StatusOK, rooms)
+}
+
+func (ctrl *BuildingController) FindRoomID(res http.ResponseWriter, req *http.Request) {
+	roomID := bson.ObjectIdHex(mux.Vars(req)["roomID"])
+	Room := model.NewRoomModel(ctrl.db)
+	room, err := Room.FindId(roomID)
+	if err == mgo.ErrNotFound {
+		ctrl.r.JSON(res, http.StatusNotFound, room)
+		return
+	} else if err != nil {
+		ctrl.r.JSON(res, http.StatusInternalServerError, room)
+		return
+	}
+
+	ctrl.r.JSON(res, http.StatusOK, room)
+}
+
+func (ctrl *BuildingController) FindBuildingId(res http.ResponseWriter, req *http.Request) {
+	buildingID := bson.ObjectIdHex(mux.Vars(req)["id"])
+	Building := model.NewBuildingModel(ctrl.db)
+	building := Building.FindId(buildingID)
+	building.Rooms, _ = building.GetRooms()
+	ctrl.r.JSON(res, http.StatusOK, building)
 }
