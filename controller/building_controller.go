@@ -35,6 +35,7 @@ func (ctrl *BuildingController) Register() {
 	ctrl.router.HandleFunc("/buildings", ctrl.FindBuilding).Name("buildings.find").Methods("GET")
 	ctrl.router.HandleFunc("/buildings", ctrl.CreateBuilding).Name("buildings.create").Methods("POST")
 	ctrl.router.HandleFunc("/buildings/{id}", ctrl.FindBuildingId).Name("buildings.findId").Methods("GET")
+	ctrl.router.HandleFunc("/buildings/{id}", ctrl.UpdateBuilding).Name("buildings.update").Methods("PUT", "PATCH")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms", ctrl.CreateRoom).Name("buildings.rooms.create").Methods("POST")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms", ctrl.FindRooms).Name("buildings.rooms.find").Methods("GET")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms/{roomID}", ctrl.FindRoomID).Name("rooms.findId").Methods("GET")
@@ -130,4 +131,24 @@ func (ctrl *BuildingController) FindBuildingId(res http.ResponseWriter, req *htt
 	building := Building.FindId(buildingID)
 	building.Rooms, _ = building.GetRooms()
 	ctrl.r.JSON(res, http.StatusOK, building)
+}
+
+func (ctrl *BuildingController) UpdateBuilding(res http.ResponseWriter, req *http.Request) {
+	buildingID := bson.ObjectIdHex(mux.Vars(req)["id"])
+	Building := model.NewBuildingModel(ctrl.db).FindId(buildingID)
+
+	dec := json.NewDecoder(req.Body)
+	err := dec.Decode(&Building)
+	if err != nil {
+		ctrl.r.JSON(res, http.StatusInternalServerError, errors.New("Invalid json"))
+		return
+	}
+
+	Building, err = Building.Save()
+	if err != nil {
+		ctrl.r.JSON(res, http.StatusInternalServerError, errors.New("Could not update building"))
+		return
+	}
+
+	ctrl.r.JSON(res, http.StatusOK, Building)
 }
