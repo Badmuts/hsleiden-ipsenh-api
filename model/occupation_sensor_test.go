@@ -3,6 +3,7 @@ package model
 import (
 	"log"
 	"testing"
+	"time"
 
 	"gopkg.in/mgo.v2/bson"
 )
@@ -34,17 +35,22 @@ func CreateDummyDatapointsIn() []*Datapoint {
 
 	number := 60.0
 	index := 1
+	time := time.Now()
 	for index < 5000 {
 		datapoint := &Datapoint{}
 		datapoint.ID = bson.NewObjectId()
 		datapoint.Key = "distance"
+		datapoint.Timestamp = time.UnixNano() / 1000000
 
+		time = time.Add(100)
 		if index >= 1000 && index <= 1050 {
 			datapoint.Value = 10.0
 		} else {
 			datapoint.Value = number
 		}
 
+		log.Printf("time: %s", datapoint.Timestamp)
+		log.Printf("new time: %s", time.UnixNano()/1000000)
 		datapointsIn = append(datapointsIn, datapoint)
 		index++
 	}
