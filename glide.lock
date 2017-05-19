@@ -1,16 +1,29 @@
-hash: 4ae0a08e9bb6dc29f386102f767ee53dedd87a6f312670e08b86b9b2780cac8a
-updated: 2017-05-09T15:00:14.261002001+02:00
+hash: c6e8510b2c60d4e8498533880e839ea1a80c23c0f0b3af6ae50a6d3307f55c4a
+updated: 2017-05-19T20:38:20.407674267Z
 imports:
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/mux
   version: 392c28fe23e1c45ddba891b0320b3b5df220beea
+- name: github.com/rs/cors
+  version: a62a804a8a009876ca59105f7899938a1349f4b3
+- name: github.com/rs/xhandler
+  version: d9d9599b6aaf6a058cb7b1f48291ded2cbd13390
 - name: github.com/unrolled/render
   version: 50716a0a853771bb36bfce61a45cdefdb98c2e6e
 - name: github.com/urfave/negroni
   version: fde5e16d32adc7ad637e9cd9ad21d4ebc6192535
+- name: golang.org/x/net
+  version: 513929065c19401a1c7b76ecd942f9f86a0c061b
+  subpackages:
+  - context
 - name: gopkg.in/mgo.v2
   version: 3f83fa5005286a7fe593b055f0d7771a7dce4655
+  subpackages:
+  - bson
+  - internal/json
+  - internal/sasl
+  - internal/scram
 - name: gopkg.in/tylerb/graceful.v1
   version: 4654dfbb6ad53cb5e27f37d99b02e16c1872fbbb
 testImports: []
