@@ -54,3 +54,8 @@ func (r *Room) Save() (room *Room, err error) {
 
 	return r, err
 }
+
+func (r *Room) FindId(ID bson.ObjectId) (room *Room, err error) {
+	err = r.rooms.FindId(ID).One(&room)
+	return room, err
+}
