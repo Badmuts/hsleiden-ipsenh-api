@@ -39,6 +39,7 @@ func (ctrl *BuildingController) Register() {
 	ctrl.router.HandleFunc("/buildings/{id}/rooms", ctrl.CreateRoom).Name("buildings.rooms.create").Methods("POST")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms", ctrl.FindRooms).Name("buildings.rooms.find").Methods("GET")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms/{roomID}", ctrl.FindRoomID).Name("rooms.findId").Methods("GET")
+	ctrl.router.HandleFunc("/buildings/{id}/rooms/{roomID}", ctrl.UpdateRoom).Name("rooms.update").Methods("PUT", "PATCH")
 }
 
 func (ctrl *BuildingController) FindBuilding(res http.ResponseWriter, req *http.Request) {
@@ -151,4 +152,32 @@ func (ctrl *BuildingController) UpdateBuilding(res http.ResponseWriter, req *htt
 	}
 
 	ctrl.r.JSON(res, http.StatusOK, Building)
+}
+
+func (ctrl *BuildingController) UpdateRoom(res http.ResponseWriter, req *http.Request) {
+	roomID := bson.ObjectIdHex(mux.Vars(req)["roomID"])
+	Room := model.NewRoomModel(ctrl.db)
+	Room, err := Room.FindId(roomID)
+	if err == mgo.ErrNotFound {
+		ctrl.r.JSON(res, http.StatusNotFound, Room)
+		return
+	} else if err != nil {
+		ctrl.r.JSON(res, http.StatusInternalServerError, err)
+		return
+	}
+
+	dec := json.NewDecoder(req.Body)
+	err = dec.Decode(&Room)
+	if err != nil {
+		ctrl.r.JSON(res, http.StatusInternalServerError, errors.New("Invalid json"))
+		return
+	}
+
+	Room, err = Room.Save()
+	if err != nil {
+		ctrl.r.JSON(res, http.StatusInternalServerError, errors.New("Could not update building"))
+		return
+	}
+
+	ctrl.r.JSON(res, http.StatusOK, Room)
 }

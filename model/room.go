@@ -30,32 +30,26 @@ func (r *Room) Save() (room *Room, err error) {
 		r.ID = bson.NewObjectId()
 	}
 
-	_, err = r.rooms.Upsert(r, r)
-	if err != nil {
-		log.Fatal("Cannot upsert room", err)
+	if _, err = r.rooms.UpsertId(r.ID, r); err != nil {
+		log.Fatal("Cannot upsert room ", err)
 		return nil, err
 	}
 
-	// Todo: save building relation
 	building := NewBuildingModel(r.db).FindId(r.BuildingID)
+	// Todo: check if room already existst
 	building.RoomIDs = append(building.RoomIDs, r.ID)
 
-	log.Printf("building", building)
-	log.Printf("rooms", building.RoomIDs)
-
-	building, err = building.Save()
-	if err != nil {
-		log.Fatal("Cannot upsert building", err)
+	if building, err = building.Save(); err != nil {
+		log.Fatal("Cannot upsert building ", err)
 		return nil, err
 	}
-
-	log.Printf("saved building", building)
-	log.Printf("saved building", building.RoomIDs)
 
 	return r, err
 }
 
 func (r *Room) FindId(ID bson.ObjectId) (room *Room, err error) {
 	err = r.rooms.FindId(ID).One(&room)
+	room.db = r.db
+	room.rooms = r.rooms
 	return room, err
 }
