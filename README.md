@@ -11,6 +11,8 @@ Api for IoT platform created during IPSENH - groep 2
 $ make start 
 # Or start via docker-compose
 $ docker-compose up -d
+# Retrieve logs for api container
+$ make logs
 ```
 
 **Testing**
