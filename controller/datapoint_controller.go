@@ -24,9 +24,9 @@ type DatapointController struct {
 }
 
 type datapoints struct {
-	SensorID   bson.ObjectId     `json:"sensor_id"`
-	SensorType string            `json:"name"`
-	Datapoints []model.Datapoint `json:"data"`
+	SensorID   bson.ObjectId      `json:"sensor_id"`
+	SensorType string             `json:"name"`
+	Datapoints []*model.Datapoint `json:"data"`
 }
 
 type RoomLog struct {
@@ -66,7 +66,7 @@ func (ctrl *DatapointController) create(res http.ResponseWriter, req *http.Reque
 			newDatapoints[index].Datapoints[i].DB = ctrl.db
 			newDatapoints[index].Datapoints[i].SensorID = newDatapoints[index].SensorID
 			newDatapoints[index].Datapoints[i].Save()
-			returnedDatapoints = append(returnedDatapoints, newDatapoints[index].Datapoints[i])
+			returnedDatapoints = append(returnedDatapoints, *newDatapoints[index].Datapoints[i])
 
 			err = ctrl.db.C("hub").Find(bson.M{"sensors": bson.M{"$elemMatch": bson.M{"_id": bson.ObjectIdHex("5915a9e7932c2b024d18561d")}}}).One(&hub)
 			err = ctrl.db.C("room").Find(bson.M{"hubs": bson.M{"$elemMatch": bson.M{"_id": bson.ObjectIdHex("5915a9e7932c2b024d18561c")}}}).One(&room)

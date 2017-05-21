@@ -1,7 +1,6 @@
 package model
 
 import (
-	"log"
 	"testing"
 	"time"
 
@@ -21,13 +20,11 @@ func SetOccupationSensor() *OccupationSensor {
 
 }
 
-func CalculateOccupation(occupationSensor *OccupationSensor) {
+func CalculateOccupation(occupationSensor *OccupationSensor) int {
 	total_exits := occupationSensor.CalculateExits()
 	total_entrances := occupationSensor.CalculateEntrances()
 
-	log.Printf("Total exits: %s", total_exits)
-	log.Printf("Total entrances: %s", total_entrances)
-
+	return (total_entrances - total_exits)
 }
 
 func CreateDummyDatapointsIn() []*Datapoint {
@@ -35,22 +32,18 @@ func CreateDummyDatapointsIn() []*Datapoint {
 
 	number := 60.0
 	index := 1
-	time := time.Now()
 	for index < 5000 {
 		datapoint := &Datapoint{}
 		datapoint.ID = bson.NewObjectId()
 		datapoint.Key = "distance"
-		datapoint.Timestamp = time.UnixNano() / 1000000
+		datapoint.Timestamp = time.Now().UnixNano() / 1000000
 
-		time = time.Add(100)
 		if index >= 1000 && index <= 1050 {
 			datapoint.Value = 10.0
 		} else {
 			datapoint.Value = number
 		}
 
-		log.Printf("time: %s", datapoint.Timestamp)
-		log.Printf("new time: %s", time.UnixNano()/1000000)
 		datapointsIn = append(datapointsIn, datapoint)
 		index++
 	}

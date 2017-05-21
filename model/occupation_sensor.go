@@ -1,8 +1,8 @@
 package model
 
 type OccupationSensor struct {
-	InSensorDatapoints  []Datapoint
-	OutSensorDatapoints []Datapoint
+	InSensorDatapoints  []*Datapoint
+	OutSensorDatapoints []*Datapoint
 	TotalEntrances      int
 	TotalExits          int
 	CurrentOccupants    int
