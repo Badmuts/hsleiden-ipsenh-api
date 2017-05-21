@@ -11,7 +11,7 @@ type Datapoint struct {
 	Key       string        `json:"key" bson:"key"`
 	Value     float64       `json:"value" bson:"value"`
 	Timestamp int64         `json:"timestamp" bson:"timestamp"`
-	db        *mgo.Database
+	DB        *mgo.Database
 }
 
 func BulkSaveDatapoints(db *mgo.Database, datapoints []Datapoint) (savedDatapoints []Datapoint, err error) {
