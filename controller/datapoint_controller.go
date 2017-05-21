@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/badmuts/hsleiden-ipsenh-api/model"
 	"github.com/gorilla/mux"
@@ -26,6 +27,13 @@ type datapoints struct {
 	SensorID   bson.ObjectId     `json:"sensor_id"`
 	SensorType string            `json:"name"`
 	Datapoints []model.Datapoint `json:"data"`
+}
+
+type RoomLog struct {
+	ID         bson.ObjectId `json:"-" bson:"_id"`
+	RoomID     bson.ObjectId `json:"-" bson:"room"`
+	Occupation int           `json:"-" bson:"occupation"`
+	Timestamp  time.Time     `json:"-" bson:"timestamp"`
 }
 
 // NewDatapointController creates the controller
@@ -97,11 +105,23 @@ func (ctrl *DatapointController) CalculateAndUpdateRoomOccupation(o model.Occupa
 	log.Printf("occupation %s", r.Occupation)
 
 	log.Printf("Room %s", r)
-	log.Printf("Database %s", ctrl.db)
-	info, err = ctrl.db.C("room").UpsertId(r.ID, r)
+	// log.Printf("Database %s", ctrl.db)
+	// info, err = ctrl.db.C("room").UpsertId(r.ID, r)
+
+	// if err != nil {
+	// 	return info, err
+	// }
+
+	roomLog := &RoomLog{}
+	roomLog.ID = bson.NewObjectId()
+	roomLog.RoomID = r.ID
+	roomLog.Occupation = r.Occupation
+	roomLog.Timestamp = time.Now()
+
+	_, err = ctrl.db.C("room_log").Upsert(roomLog, &roomLog)
 
 	if err != nil {
-		return info, err
+		return nil, err
 	}
 
 	return info, err
