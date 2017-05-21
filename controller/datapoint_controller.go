@@ -68,8 +68,8 @@ func (ctrl *DatapointController) create(res http.ResponseWriter, req *http.Reque
 			newDatapoints[index].Datapoints[i].Save()
 			returnedDatapoints = append(returnedDatapoints, *newDatapoints[index].Datapoints[i])
 
-			err = ctrl.db.C("hub").Find(bson.M{"sensors": bson.M{"$elemMatch": bson.M{"_id": bson.ObjectIdHex("5915a9e7932c2b024d18561d")}}}).One(&hub)
-			err = ctrl.db.C("room").Find(bson.M{"hubs": bson.M{"$elemMatch": bson.M{"_id": bson.ObjectIdHex("5915a9e7932c2b024d18561c")}}}).One(&room)
+			err = ctrl.db.C("hub").Find(bson.M{"sensors": bson.M{"$elemMatch": bson.M{"_id": bson.ObjectId(newDatapoints[index].SensorID)}}}).One(&hub)
+			err = ctrl.db.C("room").Find(bson.M{"hubs": bson.M{"$elemMatch": bson.M{"_id": bson.ObjectId(hub.ID)}}}).One(&room)
 
 			if room.ID != "" {
 				if newDatapoints[index].SensorType == "in" {
