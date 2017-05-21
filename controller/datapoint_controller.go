@@ -24,6 +24,7 @@ type DatapointController struct {
 
 type datapoints struct {
 	SensorID   bson.ObjectId     `json:"sensor_id"`
+	SensorType string            `json:"name"`
 	Datapoints []model.Datapoint `json:"data"`
 }
 
@@ -50,6 +51,8 @@ func (ctrl *DatapointController) create(res http.ResponseWriter, req *http.Reque
 
 	returnedDatapoints := []model.Datapoint{}
 	occupationSensor := model.OccupationSensor{}
+	hub := model.Hub{}
+	room := model.Room{}
 	for index := range newDatapoints {
 		for i := range newDatapoints[index].Datapoints {
 			newDatapoints[index].Datapoints[i].DB = ctrl.db
@@ -57,15 +60,21 @@ func (ctrl *DatapointController) create(res http.ResponseWriter, req *http.Reque
 			newDatapoints[index].Datapoints[i].Save()
 			returnedDatapoints = append(returnedDatapoints, newDatapoints[index].Datapoints[i])
 
-			hub := model.Hub{}
 			err = ctrl.db.C("hub").Find(bson.M{"sensors": bson.M{"$elemMatch": bson.M{"_id": bson.ObjectIdHex("5915a9e7932c2b024d18561d")}}}).One(&hub)
-			log.Printf("Hub: %s", hub)
-			room := model.Room{}
 			err = ctrl.db.C("room").Find(bson.M{"hubs": bson.M{"$elemMatch": bson.M{"_id": bson.ObjectIdHex("5915a9e7932c2b024d18561c")}}}).One(&room)
-			log.Printf("Room: %s", room.MaxCapacity)
 
+			if room.ID != "" {
+				if newDatapoints[index].SensorType == "in" {
+					occupationSensor.InSensorDatapoints = append(occupationSensor.InSensorDatapoints, newDatapoints[index].Datapoints[i])
+				}
+				if newDatapoints[index].SensorType == "out" {
+					occupationSensor.OutSensorDatapoints = append(occupationSensor.OutSensorDatapoints, newDatapoints[index].Datapoints[i])
+				}
+			}
 		}
 	}
+
+	ctrl.CalculateAndUpdateRoomOccupation(occupationSensor, room)
 
 	if err != nil {
 		ctrl.r.JSON(res, http.StatusInternalServerError, err)
@@ -73,4 +82,27 @@ func (ctrl *DatapointController) create(res http.ResponseWriter, req *http.Reque
 	}
 
 	ctrl.r.JSON(res, http.StatusCreated, returnedDatapoints)
+}
+
+func (ctrl *DatapointController) CalculateAndUpdateRoomOccupation(o model.OccupationSensor, r model.Room) (info *mgo.ChangeInfo, err error) {
+	entrances := o.CalculateEntrances()
+	log.Printf("entrances: %s", entrances)
+
+	exits := o.CalculateExits()
+	log.Printf("exits: %s", exits)
+
+	tmpOccupation := (r.Occupation - exits)
+
+	r.Occupation = tmpOccupation + entrances
+	log.Printf("occupation %s", r.Occupation)
+
+	log.Printf("Room %s", r)
+	log.Printf("Database %s", ctrl.db)
+	info, err = ctrl.db.C("room").UpsertId(r.ID, r)
+
+	if err != nil {
+		return info, err
+	}
+
+	return info, err
 }

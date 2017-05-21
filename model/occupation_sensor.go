@@ -1,8 +1,8 @@
 package model
 
 type OccupationSensor struct {
-	InSensorDatapoints  []*Datapoint
-	OutSensorDatapoints []*Datapoint
+	InSensorDatapoints  []Datapoint
+	OutSensorDatapoints []Datapoint
 	TotalEntrances      int
 	TotalExits          int
 	CurrentOccupants    int
@@ -11,7 +11,7 @@ type OccupationSensor struct {
 func (o *OccupationSensor) CalculateExits() int {
 
 	triggeredOut := false
-	triggeredIn := false
+	// triggeredIn := false
 
 	exits := 0
 	for index := range o.OutSensorDatapoints {
@@ -25,12 +25,12 @@ func (o *OccupationSensor) CalculateExits() int {
 			triggeredOut = true
 		}
 		if o.InSensorDatapoints[index].Value != o.InSensorDatapoints[index-1].Value {
-			triggeredIn = true
+			// triggeredIn = true
 		}
 
-		if triggeredOut && triggeredIn {
+		if triggeredOut {
 			triggeredOut = false
-			triggeredIn = false
+			// triggeredIn = false
 			exits++
 		}
 		index++
@@ -41,7 +41,7 @@ func (o *OccupationSensor) CalculateExits() int {
 
 func (o *OccupationSensor) CalculateEntrances() int {
 	triggeredIn := false
-	triggeredOut := false
+	// triggeredOut := false
 
 	entrances := 0
 	for index := range o.InSensorDatapoints {
@@ -54,12 +54,12 @@ func (o *OccupationSensor) CalculateEntrances() int {
 		}
 
 		if o.OutSensorDatapoints[index].Value != o.OutSensorDatapoints[index-1].Value {
-			triggeredOut = true
+			// triggeredOut = true
 		}
 
-		if triggeredIn && triggeredOut {
+		if triggeredIn {
 			triggeredIn = false
-			triggeredOut = false
+			// triggeredOut = false
 			entrances++
 		}
 		index++
