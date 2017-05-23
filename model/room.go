@@ -1,8 +1,12 @@
 package model
 
-import "gopkg.in/mgo.v2/bson"
-import "gopkg.in/mgo.v2"
-import "log"
+import (
+	"log"
+	"time"
+
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+)
 
 type Room struct {
 	ID          bson.ObjectId `json:"id" bson:"_id"`
@@ -22,6 +26,13 @@ func NewRoomModel(db *mgo.Database) *Room {
 	room.db = db
 	room.rooms = db.C("room")
 	return room
+}
+
+type RoomLog struct {
+	ID         bson.ObjectId `json:"-" bson:"_id"`
+	RoomID     bson.ObjectId `json:"-" bson:"room"`
+	Occupation int           `json:"-" bson:"occupation"`
+	Timestamp  time.Time     `json:"-" bson:"timestamp"`
 }
 
 // Save saves room to the DB
@@ -52,4 +63,19 @@ func (r *Room) FindId(ID bson.ObjectId) (room *Room, err error) {
 	room.db = r.db
 	room.rooms = r.rooms
 	return room, err
+}
+
+func (r *Room) FindLog(ID bson.ObjectId) (roomLogs []RoomLog, err error) {
+	// err = r.db.C("room_log").Find(bson.M{"room": bson.ObjectId(ID)}).One(&roomLog)
+	roomLogs = []RoomLog{}
+	ids := make([]bson.ObjectId, 1)
+	ids[0] = ID
+
+	err = r.db.C("room_log").Find(bson.M{"room": bson.M{"$in": ids}}).All(&roomLogs)
+
+	if err != nil {
+		log.Fatal("Can not find log", err)
+	}
+
+	return roomLogs, err
 }

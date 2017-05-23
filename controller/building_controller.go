@@ -40,6 +40,7 @@ func (ctrl *BuildingController) Register() {
 	ctrl.router.HandleFunc("/buildings/{id}/rooms", ctrl.FindRooms).Name("buildings.rooms.find").Methods("GET")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms/{roomID}", ctrl.FindRoomID).Name("rooms.findId").Methods("GET")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms/{roomID}", ctrl.UpdateRoom).Name("rooms.update").Methods("PUT", "PATCH")
+	ctrl.router.HandleFunc("/buildings/{id}/rooms/{roomID}/logs", ctrl.FindLog).Name("rooms.findLog").Methods("GET")
 }
 
 func (ctrl *BuildingController) FindBuilding(res http.ResponseWriter, req *http.Request) {
@@ -180,4 +181,27 @@ func (ctrl *BuildingController) UpdateRoom(res http.ResponseWriter, req *http.Re
 	}
 
 	ctrl.r.JSON(res, http.StatusOK, Room)
+}
+
+func (ctrl *BuildingController) FindLog(res http.ResponseWriter, req *http.Request) {
+	roomID := bson.ObjectIdHex(mux.Vars(req)["roomID"])
+	Room := model.NewRoomModel(ctrl.db)
+	Room, err := Room.FindId(roomID)
+
+	roomLogs := []model.RoomLog{}
+	roomLogs, err = Room.FindLog(roomID)
+
+	// log.Printf("roomLog %s", RoomLog)
+
+	for index := range roomLogs {
+		log.Printf("Room %s", roomLogs[index])
+	}
+
+	if err != nil {
+		log.Fatal("laat zien", err)
+		ctrl.r.JSON(res, http.StatusInternalServerError, errors.New("Could not find log"))
+		return
+	}
+
+	ctrl.r.JSON(res, http.StatusOK, roomLogs)
 }

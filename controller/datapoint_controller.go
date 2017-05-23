@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/badmuts/hsleiden-ipsenh-api/model"
 	"github.com/gorilla/mux"
@@ -25,6 +26,13 @@ type DatapointController struct {
 type datapoints struct {
 	SensorID   bson.ObjectId     `json:"sensor_id"`
 	Datapoints []model.Datapoint `json:"data"`
+}
+
+type RoomLog struct {
+	ID         bson.ObjectId `json:"-" bson:"_id"`
+	RoomID     bson.ObjectId `json:"-" bson:"room"`
+	Occupation int           `json:"-" bson:"occupation"`
+	Timestamp  time.Time     `json:"-" bson:"timestamp"`
 }
 
 // NewDatapointController creates the controller
