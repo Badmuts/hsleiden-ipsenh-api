@@ -30,9 +30,9 @@ func NewRoomModel(db *mgo.Database) *Room {
 
 type RoomLog struct {
 	ID         bson.ObjectId `json:"-" bson:"_id"`
-	RoomID     bson.ObjectId `json:"-" bson:"room"`
-	Occupation int           `json:"-" bson:"occupation"`
-	Timestamp  time.Time     `json:"-" bson:"timestamp"`
+	RoomID     bson.ObjectId `json:"room" bson:"room"`
+	Occupation int           `json:"occupation" bson:"occupation"`
+	Timestamp  time.Time     `json:"time" bson:"timestamp"`
 }
 
 // Save saves room to the DB
