@@ -185,11 +185,14 @@ func (ctrl *BuildingController) UpdateRoom(res http.ResponseWriter, req *http.Re
 
 func (ctrl *BuildingController) FindLog(res http.ResponseWriter, req *http.Request) {
 	roomID := bson.ObjectIdHex(mux.Vars(req)["roomID"])
+	from := req.URL.Query().Get("from")
+	till := req.URL.Query().Get("till")
+
 	Room := model.NewRoomModel(ctrl.db)
 	Room, err := Room.FindId(roomID)
 
 	roomLogs := []model.RoomLog{}
-	roomLogs, err = Room.FindLog(roomID)
+	roomLogs, err = Room.FindLog(roomID, from, till)
 
 	// log.Printf("roomLog %s", RoomLog)
 

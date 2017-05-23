@@ -65,13 +65,14 @@ func (r *Room) FindId(ID bson.ObjectId) (room *Room, err error) {
 	return room, err
 }
 
-func (r *Room) FindLog(ID bson.ObjectId) (roomLogs []RoomLog, err error) {
+func (r *Room) FindLog(ID bson.ObjectId, from string, till string) (roomLogs []RoomLog, err error) {
 	// err = r.db.C("room_log").Find(bson.M{"room": bson.ObjectId(ID)}).One(&roomLog)
 	roomLogs = []RoomLog{}
 	ids := make([]bson.ObjectId, 1)
 	ids[0] = ID
 
 	err = r.db.C("room_log").Find(bson.M{"room": bson.M{"$in": ids}}).All(&roomLogs)
+	// err = r.db.C("room_log").Find(bson.M{"$and": []bson.M{bson.M{"room": bson.M{"$in": ids}}, bson.M{"timestamp": bson.M{"$gte": "2017-05-18", "$lte": "2017-05-22"}}}}).All(&roomLogs)
 
 	if err != nil {
 		log.Fatal("Can not find log", err)
