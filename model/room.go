@@ -1,8 +1,12 @@
 package model
 
-import "gopkg.in/mgo.v2/bson"
-import "gopkg.in/mgo.v2"
-import "log"
+import (
+	"log"
+	"time"
+
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+)
 
 type Room struct {
 	ID          bson.ObjectId `json:"id" bson:"_id"`
@@ -13,7 +17,8 @@ type Room struct {
 	// Hubs        []Hub           `json:"hubs" bson:"-"`
 	HubIDs     []bson.ObjectId `json:"-" bson:"hubs,omitempty"`
 	BuildingID bson.ObjectId   `json:"-" bson:"building"`
-	db         *mgo.Database   `json:"-" bson:"-"`
+	db         *mgo.Database
+	RoomLogs   []RoomLog       `json:"logs" bson:"-"`
 	rooms      *mgo.Collection `bson:"-"`
 }
 
@@ -22,6 +27,13 @@ func NewRoomModel(db *mgo.Database) *Room {
 	room.db = db
 	room.rooms = db.C("room")
 	return room
+}
+
+type RoomLog struct {
+	ID         bson.ObjectId `json:"id" bson:"_id"`
+	RoomID     bson.ObjectId `json:"-" bson:"room"`
+	Occupation int           `json:"occupation" bson:"occupation"`
+	Timestamp  time.Time     `json:"time" bson:"timestamp"`
 }
 
 // Save saves room to the DB
@@ -51,5 +63,11 @@ func (r *Room) FindId(ID bson.ObjectId) (room *Room, err error) {
 	err = r.rooms.FindId(ID).One(&room)
 	room.db = r.db
 	room.rooms = r.rooms
+
+	ids := make([]bson.ObjectId, 1)
+	ids[0] = ID
+
+	err = r.db.C("room_log").Find(bson.M{"room": bson.M{"$in": ids}}).All(&room.RoomLogs)
+
 	return room, err
 }
