@@ -68,8 +68,17 @@ func (ctrl *DatapointController) create(res http.ResponseWriter, req *http.Reque
 			newDatapoints[index].Datapoints[i].Save()
 			returnedDatapoints = append(returnedDatapoints, *newDatapoints[index].Datapoints[i])
 
-			err = ctrl.db.C("hub").Find(bson.M{"sensors": bson.M{"$elemMatch": bson.M{"_id": bson.ObjectId(newDatapoints[index].SensorID)}}}).One(&hub)
-			err = ctrl.db.C("room").Find(bson.M{"hubs": bson.M{"$elemMatch": bson.M{"_id": bson.ObjectId(hub.ID)}}}).One(&room)
+			err = ctrl.db.C("hub").Find(bson.M{"sensors": newDatapoints[index].SensorID}).One(&hub)
+			if err != nil {
+				log.Printf("HUB ERROR %s", err)
+			}
+			log.Printf("HUB %s", hub)
+
+			err = ctrl.db.C("room").Find(bson.M{"hubs": hub.ID}).One(&room)
+			if err != nil {
+				log.Printf("ROOM ERROR %s", err)
+			}
+			log.Printf("ROOM %s", room)
 
 			if room.ID != "" {
 				if newDatapoints[index].SensorType == "in" {
@@ -82,7 +91,9 @@ func (ctrl *DatapointController) create(res http.ResponseWriter, req *http.Reque
 		}
 	}
 
-	ctrl.CalculateAndUpdateRoomOccupation(occupationSensor, room)
+	if room.ID != "" {
+		ctrl.CalculateAndUpdateRoomOccupation(occupationSensor, room)
+	}
 
 	if err != nil {
 		ctrl.r.JSON(res, http.StatusInternalServerError, err)
