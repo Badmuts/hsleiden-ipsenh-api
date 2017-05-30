@@ -1,7 +1,10 @@
 package model
 
 import (
+	"encoding/json"
 	"errors"
+
+	"time"
 
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -77,4 +80,50 @@ func (h *Hub) FindByID(ID string) (hub Hub, err error) {
 	err = h.db.C("hub").FindId(bson.ObjectIdHex(ID)).One(&hub)
 	hub.db = h.db
 	return hub, err
+}
+
+// Status checks if hub retrieved data from sensors in the last 15 min and write the status: 'online', 'offline' or 'needs attention'
+func (h *Hub) Status() string {
+	toTime := time.Now().Unix()
+	fromTime := toTime - (15 * 60)
+	// Query sensor data for last 15 minsD
+	dpm := DatapointModel(h.db)
+	datapoints := make(map[bson.ObjectId][]Datapoint)
+	for _, sensor := range h.SensorIDS {
+		datapoints[sensor], _ = dpm.Find(bson.M{
+			"sensor": sensor,
+			"timestamp": bson.M{
+				"$gte": fromTime,
+				"$lt":  toTime,
+			},
+		})
+	}
+
+	foundData := 0
+	for _, datapoints := range datapoints {
+		if len(datapoints) > 0 {
+			foundData++
+		}
+	}
+
+	if foundData == len(h.SensorIDS) {
+		// If resultset contains data for all sensors everthing is fine
+		return "online"
+	} else if foundData > 0 && foundData < len(h.SensorIDS) {
+		// If resultset is missing some senor data, hub/sensor needs attention
+		return "needs attention"
+	}
+	// If resultset is empty hub/sensor is offline
+	return "offline"
+}
+
+func (h *Hub) MarshalJSON() ([]byte, error) {
+	type Alias Hub
+	return json.Marshal(&struct {
+		*Alias
+		Status string `json:"status"`
+	}{
+		Status: h.Status(),
+		Alias:  (*Alias)(h),
+	})
 }
