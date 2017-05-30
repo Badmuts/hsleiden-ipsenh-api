@@ -37,13 +37,6 @@ type RoomLog struct {
 	Timestamp  time.Time     `json:"-" bson:"timestamp"`
 }
 
-type RoomLog struct {
-	ID         bson.ObjectId `json:"-" bson:"_id"`
-	RoomID     bson.ObjectId `json:"-" bson:"room"`
-	Occupation int           `json:"-" bson:"occupation"`
-	Timestamp  time.Time     `json:"-" bson:"timestamp"`
-}
-
 // NewDatapointController creates the controller
 func NewDatapointController(router *mux.Router, r *render.Render, db *mgo.Database) *DatapointController {
 	ctrl := &DatapointController{router, r, db.C("datapoint"), db, model.DatapointModel(db)}
