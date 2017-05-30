@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -68,8 +69,19 @@ func (ctrl *DatapointController) create(res http.ResponseWriter, req *http.Reque
 			newDatapoints[index].Datapoints[i].Save()
 			returnedDatapoints = append(returnedDatapoints, *newDatapoints[index].Datapoints[i])
 
-			err = ctrl.db.C("hub").Find(bson.M{"sensors": bson.M{"$elemMatch": bson.M{"_id": bson.ObjectId(newDatapoints[index].SensorID)}}}).One(&hub)
-			err = ctrl.db.C("room").Find(bson.M{"hubs": bson.M{"$elemMatch": bson.M{"_id": bson.ObjectId(hub.ID)}}}).One(&room)
+			err = ctrl.db.C("hub").Find(bson.M{"sensors": newDatapoints[index].SensorID}).One(&hub)
+			if err != nil {
+				log.Printf("HUB ERROR %s", err)
+				ctrl.r.JSON(res, http.StatusInternalServerError, errors.New("Could not find hub of with sensor_id"))
+				return
+			}
+
+			err = ctrl.db.C("room").Find(bson.M{"hubs": hub.ID}).One(&room)
+			if err != nil {
+				log.Printf("ROOM ERROR %s", err)
+				ctrl.r.JSON(res, http.StatusInternalServerError, errors.New("Could not find room of hub"))
+				return
+			}
 
 			if room.ID != "" {
 				if newDatapoints[index].SensorType == "in" {
