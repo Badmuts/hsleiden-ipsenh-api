@@ -94,7 +94,9 @@ func (ctrl *DatapointController) create(res http.ResponseWriter, req *http.Reque
 		}
 	}
 
-	ctrl.CalculateAndUpdateRoomOccupation(occupationSensor, room)
+	if room.ID != "" {
+		ctrl.CalculateAndUpdateRoomOccupation(occupationSensor, room)
+	}
 
 	if err != nil {
 		ctrl.r.JSON(res, http.StatusInternalServerError, err)
