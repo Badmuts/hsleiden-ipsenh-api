@@ -67,6 +67,7 @@ func (ctrl *HubController) find(res http.ResponseWriter, req *http.Request) {
 
 	for index, _ := range hubs {
 		hubs[index].Sensors, _ = hubs[index].GetSensors()
+		hubs[index].Room, _ = hubs[index].GetRoom()
 	}
 
 	ctrl.r.JSON(res, http.StatusOK, hubs)

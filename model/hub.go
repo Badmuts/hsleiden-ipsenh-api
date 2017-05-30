@@ -16,6 +16,7 @@ type Hub struct {
 	Serial    string          `json:"serialNumber" bson:"serial"`
 	SensorIDS []bson.ObjectId `json:"-" bson:"sensors"`
 	Sensors   []Sensor        `json:"sensors,omitempty" bson:"-"` // do not store directly in db
+	Room      Room            `json:"room,omitempty" bson:"-"`
 	db        *mgo.Database
 }
 
@@ -60,6 +61,14 @@ func (h *Hub) GetSensors() (sensors []Sensor, err error) {
 	err = h.db.C("sensor").Find(bson.M{"_id": bson.M{"$in": h.SensorIDS}}).All(&sensors)
 	h.Sensors = sensors
 	return sensors, err
+}
+
+func (h *Hub) GetRoom() (room Room, err error) {
+	err = h.db.C("room").Find(bson.M{
+		"hubs": h.ID,
+	}).One(&room)
+	h.Room = room
+	return room, err
 }
 
 // Find finds a list of hubs
