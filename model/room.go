@@ -11,10 +11,10 @@ type Room struct {
 	MaxCapacity int           `json:"maxCapacity" bson:"maxCapacity"`
 	Occupation  int           `json:"occupation" bson:"occupation"`
 	// Hubs        []Hub           `json:"hubs" bson:"-"`
-	HubIDs     []bson.ObjectId `json:"-" bson:"hubs"`
+	HubIDs     []bson.ObjectId `json:"-" bson:"hubs,omitempty"`
 	BuildingID bson.ObjectId   `json:"-" bson:"building"`
-	db         *mgo.Database
-	rooms      *mgo.Collection
+	db         *mgo.Database   `json:"-" bson:"-"`
+	rooms      *mgo.Collection `bson:"-"`
 }
 
 func NewRoomModel(db *mgo.Database) *Room {
