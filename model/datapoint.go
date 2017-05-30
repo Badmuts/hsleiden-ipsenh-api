@@ -54,3 +54,8 @@ func BulkSaveDatapoints(db *mgo.Database, datapoints []Datapoint) (savedDatapoin
 	return datapoints, err
 
 }
+
+func (d *Datapoint) Find(query interface{}) (datapoints []Datapoint, err error) {
+	err = d.DB.C("datapoint").Find(query).All(&datapoints)
+	return datapoints, err
+}
