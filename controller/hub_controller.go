@@ -32,6 +32,7 @@ func (ctrl *HubController) Register() {
 	ctrl.router.HandleFunc("/hubs", ctrl.create).Name("hubs.create").Methods("POST")
 	ctrl.router.HandleFunc("/hubs", ctrl.find).Name("hubs.find").Methods("GET")
 	ctrl.router.HandleFunc("/hubs/{id}", ctrl.findOne).Name("hubs.findOne").Methods("GET")
+	ctrl.router.HandleFunc("/hubs/{id}", ctrl.update).Name("hubs.findOne").Methods("PUT", "PATCH")
 }
 
 func (ctrl *HubController) create(res http.ResponseWriter, req *http.Request) {
@@ -71,4 +72,19 @@ func (ctrl *HubController) find(res http.ResponseWriter, req *http.Request) {
 	}
 
 	ctrl.r.JSON(res, http.StatusOK, hubs)
+}
+
+func (ctrl *HubController) update(res http.ResponseWriter, req *http.Request) {
+	newHub := model.HubModel(ctrl.db)
+	dec := json.NewDecoder(req.Body)
+	err := dec.Decode(&newHub)
+
+	_, err = newHub.Save()
+
+	if err != nil {
+		ctrl.r.JSON(res, http.StatusInternalServerError, err)
+		log.Fatal(err)
+	}
+
+	ctrl.r.JSON(res, http.StatusOK, newHub)
 }

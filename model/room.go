@@ -16,7 +16,7 @@ type Room struct {
 	Occupation  int           `json:"occupation" bson:"occupation"`
 	// Hubs        []Hub           `json:"hubs" bson:"-"`
 	HubIDs      []bson.ObjectId `json:"-" bson:"hubs,omitempty"`
-	BuildingID  bson.ObjectId   `json:"-" bson:"building"`
+	BuildingID  bson.ObjectId   `json:"-" bson:"building,omitempty"`
 	db          *mgo.Database
 	RoomLogs    []RoomLog       `json:"logs" bson:"-"`
 	RoomRosters []RoomRoster    `json:"roster" bson:"-"`

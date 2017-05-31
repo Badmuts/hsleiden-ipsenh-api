@@ -20,7 +20,10 @@ func NewServer() *Server {
 	router := mux.NewRouter()
 	db := db.Connect()
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"},
+		AllowedOrigins: []string{"*", "http://localhost:9000"},
+		AllowedHeaders: []string{"Origin, X-Requested-With, Content-Type, Accept"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		// Debug:          true,
 	})
 
 	controller.NewHealthController(router, r)
