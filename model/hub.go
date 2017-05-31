@@ -42,7 +42,15 @@ func (h *Hub) Save() (info *mgo.ChangeInfo, err error) {
 		h.db.C("sensor").Upsert(h.Sensors[i], h.Sensors[i])
 	}
 
-	info, err = h.db.C("hub").Upsert(h, h)
+	if h.Room.ID != "" {
+		h.Room.HubIDs = append(h.Room.HubIDs, bson.ObjectId(h.ID))
+		err = h.db.C("room").UpdateId(h.Room.ID, h.Room)
+		if err != nil {
+			return info, err
+		}
+	}
+
+	info, err = h.db.C("hub").UpsertId(h.ID, h)
 	if err != nil {
 		return info, err
 	}
