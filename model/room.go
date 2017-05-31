@@ -15,11 +15,12 @@ type Room struct {
 	MaxCapacity int           `json:"maxCapacity" bson:"maxCapacity"`
 	Occupation  int           `json:"occupation" bson:"occupation"`
 	// Hubs        []Hub           `json:"hubs" bson:"-"`
-	HubIDs     []bson.ObjectId `json:"-" bson:"hubs,omitempty"`
-	BuildingID bson.ObjectId   `json:"-" bson:"building"`
-	db         *mgo.Database
-	RoomLogs   []RoomLog       `json:"logs" bson:"-"`
-	rooms      *mgo.Collection `bson:"-"`
+	HubIDs      []bson.ObjectId `json:"-" bson:"hubs,omitempty"`
+	BuildingID  bson.ObjectId   `json:"-" bson:"building"`
+	db          *mgo.Database
+	RoomLogs    []RoomLog       `json:"logs" bson:"-"`
+	RoomRosters []RoomRoster    `json:"roster" bson:"-"`
+	rooms       *mgo.Collection `bson:"-"`
 }
 
 func NewRoomModel(db *mgo.Database) *Room {
@@ -34,6 +35,14 @@ type RoomLog struct {
 	RoomID     bson.ObjectId `json:"-" bson:"room"`
 	Occupation int           `json:"occupation" bson:"occupation"`
 	Timestamp  time.Time     `json:"time" bson:"timestamp"`
+}
+
+type RoomRoster struct {
+	ID           bson.ObjectId `json:"id" bson:"_id"`
+	RoomID       bson.ObjectId `json:"-" bson:"room"`
+	PersonAmount int           `json:"amount" bson:"person_amount"`
+	From         time.Time     `json:"from" bson:"from"`
+	Till         time.Time     `json:"till" bson:"till"`
 }
 
 // Save saves room to the DB
@@ -67,7 +76,8 @@ func (r *Room) FindId(ID bson.ObjectId) (room *Room, err error) {
 	ids := make([]bson.ObjectId, 1)
 	ids[0] = ID
 
-	err = r.db.C("room_log").Find(bson.M{"room": bson.M{"$in": ids}}).All(&room.RoomLogs)
+	err = r.db.C("room_log").Find(bson.M{"room": bson.ObjectId(ID)}).All(&room.RoomLogs)
+	err = r.db.C("room_reservation").Find(bson.M{"room": bson.ObjectId(ID)}).All(&room.RoomRosters)
 
 	return room, err
 }
