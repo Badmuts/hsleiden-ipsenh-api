@@ -73,9 +73,6 @@ func (r *Room) FindId(ID bson.ObjectId) (room *Room, err error) {
 	room.db = r.db
 	room.rooms = r.rooms
 
-	ids := make([]bson.ObjectId, 1)
-	ids[0] = ID
-
 	err = r.db.C("room_log").Find(bson.M{"room": bson.ObjectId(ID)}).All(&room.RoomLogs)
 	err = r.db.C("room_reservation").Find(bson.M{"room": bson.ObjectId(ID)}).All(&room.RoomRosters)
 
