@@ -74,7 +74,15 @@ func (r *Room) FindId(ID bson.ObjectId) (room *Room, err error) {
 	room.rooms = r.rooms
 
 	err = r.db.C("room_log").Find(bson.M{"room": bson.ObjectId(ID)}).All(&room.RoomLogs)
+	if err != nil {
+		log.Fatal("Can not fetch logs for this room", err)
+		return nil, err
+	}
 	err = r.db.C("room_reservation").Find(bson.M{"room": bson.ObjectId(ID)}).All(&room.RoomRosters)
+	if err != nil {
+		log.Fatal("Can not fetch reservations for this room", err)
+		return nil, err
+	}
 
 	return room, err
 }
