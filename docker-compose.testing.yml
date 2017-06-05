@@ -13,3 +13,8 @@ services:
   
   db:
     image: mongo:3.4
+
+networks:
+  default:
+    external:
+      name: api
