@@ -29,3 +29,6 @@ hsleiden-ipsenh-api
 vendor/
 
 gin-bin
+
+operations/secrets.tar
+operations/secrets/
