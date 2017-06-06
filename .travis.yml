@@ -17,3 +17,6 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_150e64d3bf53_key -iv $encrypted_150e64d3bf53_iv
   -in secrets.tar.enc -out operations/secrets.tar -d
 - tar -xvf operations/secrets.tar -C operations
+deploy:
+  provider: script
+  script: make deploy
