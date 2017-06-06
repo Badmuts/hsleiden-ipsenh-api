@@ -74,3 +74,7 @@ start:
 
 logs:
 	docker-compose logs -f api
+
+# Deploy task, only works on ci env
+deploy:
+	./operations/scripts/deploy.sh $$TRAVIS_BRANCH $(CURRENT)
