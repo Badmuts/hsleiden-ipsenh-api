@@ -61,9 +61,9 @@ function createDeployment() {
     return github.post(`/repos/${repoSlug}/deployments`, {
         sha: process.env.TRAVIS_COMMIT,
         ref: travisBranch,
-        description: `Deploying $TRAVIS_BRANCH to ${env}`,
+        description: `Deploying ${process.env.TRAVIS_BRANCH} to ${env}`,
         environment: env,
-        required_contexts: [],
+        required_contexts: [], // ignore checks
         task: 'deploy'
     })
     .catch(err  => log(chalk.red('COULD NOT CREATE DEPLOYMENT'), err));
@@ -94,7 +94,8 @@ createDeployment()
 .then(deployment => {
     // time to deploy
     // Read compose file into cat to later output on server
-    var composeProjectName = `api${travisBranch}`;
+    var composeProjectName = (env == 'production' || env == 'staging') ? `api${env}` : `api${travisBranch}`;
+
     sh.cat(compose)
     .exec(`ssh -o "IdentitiesOnly yes" \
             -o "StrictHostKeyChecking no" \
