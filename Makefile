@@ -62,6 +62,10 @@ build:
 push: build
 	echo "$(GREEN)--- PUSHING IMAGE TO HUB ---$(NC)"
 	docker push $(REPO)/$(IMAGE):$(CURRENT)
+	if ![[ -z $$TRAVIS_TAG]]; then \
+		docker tag $(REPO)/$(IMAGE):$(CURRENT) $(REPO)/$(IMAGE):$$TRAVIS_TAG; \
+		docker push $(REPO)/$(IMAGE):$$TRAVIS_TAG; \
+	fi
 
 # Cleanup step to remove test image and build image
 cleanup:
@@ -74,3 +78,7 @@ start:
 
 logs:
 	docker-compose logs -f api
+
+# Deploy task, only works on ci env
+deploy:
+	./operations/scripts/deploy.sh $$TRAVIS_BRANCH $(CURRENT)

@@ -1,0 +1,24 @@
+version: "2.1"
+
+services: 
+  api:
+    image: badmuts/hsleiden-ipsenh-api:${CURRENT}
+    ports:
+      - 8080
+    labels:
+      - "traefik.backend=api-production"
+      - "traefik.frontend.rule=Host:api.ipsenh.daan.codes"
+      - "traefik.enable=true"
+      - "traefik.port=8080"
+    restart: unless-stopped
+  
+  db:
+    image: mongo:3.4
+    restart: unless-stopped
+    volumes:
+     - "/home/ec2-user/mongo_data/production:/data/db"
+
+networks:
+  default:
+    external:
+      name: api
