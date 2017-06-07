@@ -1,0 +1,12 @@
+{
+  "description": "Deployment script with docker-compose and Github deployments",
+  "license": "MIT",
+  "repository": {},
+  "dependencies": {
+    "axios": "^0.16.2",
+    "bluebird": "^3.5.0",
+    "chalk": "^1.1.3",
+    "shelljs": "^0.7.8",
+    "yargs": "^8.0.1"
+  }
+}
