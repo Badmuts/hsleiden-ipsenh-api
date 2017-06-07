@@ -20,11 +20,6 @@ var travisBranch = yargs.branch;
 var current = yargs.tag;
 var env = yargs.env;
 
-// @todo Check testing, staging, production
-if (env != 'testing') {
-    return log(chalk.cyan('INFO ::'), 'Deployment is disabled for non testing environments');
-}
-
 var compose = 'docker-compose.' + env + '.yml';
 
 // Check if compose file exists
