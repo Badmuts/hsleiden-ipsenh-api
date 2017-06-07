@@ -103,6 +103,7 @@ createDeployment()
     {silent:true}, // Default behaviour prints everything to console
     function(code, stdout, stderr) {
         var logUrl = `https://travis-ci.com/Badmuts/hsleiden-ipsenh-api/builds/${process.env.TRAVIS_BUILD_ID}`;
+        var envUrl = (env == 'staging') ? `https://staging.api.ipsenh.daan.codes` : (env == 'production') ? `https://api.ipsenh.daan.codes` : `https://${travisBranch}.api.ipsenh.daan.codes`;
 
         if (code > 0) {
             log(chalk.red('ERROR :: '), stderr)
@@ -136,7 +137,7 @@ createDeployment()
                                 "short": true
                             }, {
                                 "title": "Deploy url",
-                                "value": `<${envUrl}|${travisBranch}.api.ipsenh.daan.codes>`,
+                                "value": `<${envUrl}|${envUrl.replace('https://', '')}>`,
                                 "short": true
                             }, {
                                 "title": "Travis build :construction_worker:",
@@ -163,7 +164,6 @@ createDeployment()
         log(chalk.cyan('UPDATING GITHUB DEPLOYMENT...'))
 
         // Update deployment
-        var envUrl = `https://${travisBranch}.api.ipsenh.daan.codes`;
         updateDeployment(deployment.id, {
             state: 'success',
             environment_url: envUrl,
@@ -198,7 +198,7 @@ createDeployment()
                             "short": true
                         }, {
                             "title": "Deploy url",
-                            "value": `<${envUrl}|${travisBranch}.api.ipsenh.daan.codes>`,
+                            "value": `<${envUrl}|${envUrl.replace('https://', '')}>`,
                             "short": true
                         }, {
                             "title": "Travis build :construction_worker:",
