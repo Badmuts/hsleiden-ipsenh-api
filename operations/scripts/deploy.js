@@ -152,7 +152,7 @@ createDeployment()
                                 "short": true
                             }, {
                                 "title": "Commit",
-                                "value": `<https://github.com/${repoSlug}/commit/${process.env.TRAVIS_COMMIT}|process.env.TRAVIS_COMMIT>`,
+                                "value": `<https://github.com/${repoSlug}/commit/${process.env.TRAVIS_COMMIT}|${process.env.TRAVIS_COMMIT.substring(0, 6)}>`,
                                 "short": true
                             }]
                         }
@@ -214,7 +214,7 @@ createDeployment()
                             "short": true
                         }, {
                             "title": "Commit",
-                            "value": `<https://github.com/${repoSlug}/commit/${process.env.TRAVIS_COMMIT}|process.env.TRAVIS_COMMIT>`,
+                            "value": `<https://github.com/${repoSlug}/commit/${process.env.TRAVIS_COMMIT}|${process.env.TRAVIS_COMMIT.substring(0, 6)}>`,
                             "short": true
                         }]
                     }
