@@ -62,6 +62,7 @@ function createDeployment() {
         ref: process.env.TRAVIS_COMMIT || travisBranch,
         description: `Deploying $TRAVIS_BRANCH to ${env}`,
         environment: env,
+        required_contexts: []
     })
     .catch(err  => log(chalk.red('COULD NOT CREATE DEPLOYMENT'), err));
 }
