@@ -59,7 +59,8 @@ var slack = (data) => axios.post(slackHookEndpoint, data);
  */
 function createDeployment() {
     return github.post(`/repos/${repoSlug}/deployments`, {
-        ref: process.env.TRAVIS_COMMIT || travisBranch,
+        sha: process.env.TRAVIS_COMMIT,
+        ref: travisBranch,
         description: `Deploying $TRAVIS_BRANCH to ${env}`,
         environment: env,
         required_contexts: []
@@ -114,7 +115,8 @@ createDeployment()
                 description: `Could not deploy ${travisBranch} ${stderr}`,
                 log_url: logUrl
             })
-            .then(function() {
+            .then((res) => {
+                var deployment = res.data;
                 slack({
                     "channel": "#builds",
                     "username": "Deploy Bot",
@@ -122,8 +124,11 @@ createDeployment()
                     "attachments": [
                         {
                             "fallback": `https://github.com/${repoSlug} deploy failed: ${current}`,
-                            "pretext": `<https://github.com/${repoSlug}|${repoSlug}> deploy failed: :cd: ${current}`,
+                            "pretext": `<https://github.com/${repoSlug}|${repoSlug}> deploy failed: ${current}`,
                             "color": "bad",
+                            "author_name": deployment.creator.login,
+                            "author_link": deployment.creator.html_url,
+                            "author_icon": deployment.creator.avatar_url,
                             "fields": [{
                                 "title": "Image :cd:",
                                 "value": `<https://hub.docker.com/r/badmuts/hsleiden-ipsenh-api/tags/|${current}>`,
@@ -164,6 +169,8 @@ createDeployment()
             log(chalk.green('GITHUB DEPLOYMENT UPDATED'))
             log(chalk.cyan('SENDING SLACK NOTIFICATION...'))
 
+            var deployment = res.data;
+
             slack({
                 "channel": "#builds",
                 "username": "Deploy Bot",
@@ -171,8 +178,11 @@ createDeployment()
                 "attachments": [
                     {
                         "fallback": `https://github.com/${repoSlug} deployed successfully: ${current}`,
-                        "pretext": `<https://github.com/${repoSlug}|${repoSlug}> deployed successfully: :cd: ${current}`,
+                        "pretext": `<https://github.com/${repoSlug}|${repoSlug}> deployed successfully: ${current}`,
                         "color": "good",
+                        "author_name": deployment.creator.login,
+                        "author_link": deployment.creator.html_url,
+                        "author_icon": deployment.creator.avatar_url,
                         "fields": [{
                             "title": "Image :cd:",
                             "value": `<https://hub.docker.com/r/badmuts/hsleiden-ipsenh-api/tags/|${current}>`,
