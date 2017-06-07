@@ -29,11 +29,21 @@ before_deploy:
 
 # Run deploy script
 deploy:
-  provider: script
-  script: ./operations/scripts/deploy.js --branch $TRAVIS_BRANCH --env testing
-  skip_cleanup: true
-  on:
-    all_branches: true
+  - provider: script
+    script: ./operations/scripts/deploy.js --branch $TRAVIS_BRANCH --env testing
+    skip_cleanup: true
+    on:
+      all_branches: true
+  - provider: script
+    script: ./operations/scripts/deploy.js --branch $TRAVIS_BRANCH --env staging
+    skip_cleanup: true
+    on:
+      branch: master
+  - provider: script
+    script: ./operations/scripts/deploy.js --tag $TRAVIS_TAG --env production
+    skip_cleanup: true
+    on:
+      tags: true
 
 # Notify slack of build status
 notifications:
