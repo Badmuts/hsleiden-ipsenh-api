@@ -193,7 +193,6 @@ createDeployment()
                         "author_name": deployment.creator.login,
                         "author_link": deployment.creator.html_url,
                         "author_icon": deployment.creator.avatar_url,
-                        "callback_id": "ipsenh_deploy",
                         "fields": [{
                             "title": "Image :cd:",
                             "value": `<https://hub.docker.com/r/badmuts/hsleiden-ipsenh-api/tags/|${current}>`,
@@ -221,7 +220,7 @@ createDeployment()
                         }],
                         "actions": [{
                             "name": "deployment",
-                            "text": "Rollback",
+                            "text": "Rollback [WIP]",
                             "style": "danger",
                             "type": "button",
                             "value": "rollback",
