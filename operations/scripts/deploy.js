@@ -193,6 +193,7 @@ createDeployment()
                         "author_name": deployment.creator.login,
                         "author_link": deployment.creator.html_url,
                         "author_icon": deployment.creator.avatar_url,
+                        "callback_id": "ipsenh_deploy",
                         "fields": [{
                             "title": "Image :cd:",
                             "value": `<https://hub.docker.com/r/badmuts/hsleiden-ipsenh-api/tags/|${current}>`,
@@ -217,6 +218,19 @@ createDeployment()
                             "title": "Commit",
                             "value": `<https://github.com/${repoSlug}/commit/${process.env.TRAVIS_COMMIT}|${process.env.TRAVIS_COMMIT.substring(0, 6)}>`,
                             "short": true
+                        }],
+                        "actions": [{
+                            "name": "deployment",
+                            "text": "Rollback",
+                            "style": "danger",
+                            "type": "button",
+                            "value": "rollback",
+                            "confirm": {
+                                "title": "Are you sure?",
+                                "text": "This will rollback the current deployment (THIS IS NOT IMPLEMENTED)",
+                                "ok_text": "Rollback",
+                                "dismiss_text": "Cancel"
+                            }
                         }]
                     }
                 ]
