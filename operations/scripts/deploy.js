@@ -146,6 +146,14 @@ createDeployment()
                                 "title": "Travis build :construction_worker:",
                                 "value": `<${logUrl}|#${process.env.TRAVIS_BUILD_NUMBER}>`,
                                 "short": true
+                            }, {
+                                "title": "Branch",
+                                "value": travisBranch,
+                                "short": true
+                            }, {
+                                "title": "Commit",
+                                "value": `<https://github.com/${repoSlug}/commit/${process.env.TRAVIS_COMMIT}|process.env.TRAVIS_COMMIT>`,
+                                "short": true
                             }]
                         }
                     ]
@@ -199,6 +207,14 @@ createDeployment()
                         }, {
                             "title": "Travis build :construction_worker:",
                             "value": `<${logUrl}|#${process.env.TRAVIS_BUILD_NUMBER}>`,
+                            "short": true
+                        }, {
+                            "title": "Branch",
+                            "value": travisBranch,
+                            "short": true
+                        }, {
+                            "title": "Commit",
+                            "value": `<https://github.com/${repoSlug}/commit/${process.env.TRAVIS_COMMIT}|process.env.TRAVIS_COMMIT>`,
                             "short": true
                         }]
                     }
