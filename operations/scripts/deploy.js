@@ -63,7 +63,8 @@ function createDeployment() {
         ref: travisBranch,
         description: `Deploying $TRAVIS_BRANCH to ${env}`,
         environment: env,
-        required_contexts: []
+        required_contexts: [],
+        task: 'deploy'
     })
     .catch(err  => log(chalk.red('COULD NOT CREATE DEPLOYMENT'), err));
 }
