@@ -1,15 +1,51 @@
 language: go
 sudo: required
 services:
-- docker
-before_script:
-- docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-script:
-- make ci
+  - docker
+
+# Setup env vars
 env:
   global:
-  - secure: qJNel4O84Wr9LT0KfzJl+7iZDpU7TvffpPRFTF/y/BOKtzJ88m5rYDEC/tIqrGGQWIX7x6Knmp3tjUc0d6qxb0UXywz9/0jjQwAa/3t58WoBfBtosfwl/e3G28Oqxg3zNuia6oFhFJumZzRD6bhjXq7vPNHrZsCyYrAErsh2GYU9NXodFiw+0mKl09+a0BcB2F9dkua0/Z5+TOfgc0UhPaDBC8+ktLKHCr5O7CTFh6s7bh3/9+mB9t4gKkbYOLEJLE8WUUwMWrhxe38KTXv3ZZNSC+0CzzB8XpRN1+3vFl2UnI9d2YO2gjJs3mJ2xsswPJN0Tww/fVnVFYbuVf4HphuWZ0e2+T3U+6MpH430xLmPYW8RWVtKaRLz0pIo6yLNAnq+aAMcC96fK6BVlt62jc6wbsw8f3TGbb72XIQsxo0WF8P/HugODdEr0s8iqQcbBA+kcNXxUl4Zud3XQgnIB7+xWGZcxgNWlvtR65ogoJOqJs/Q4AAZOK1fDQz9cb0hJEMt85V4mQbUuRgqkyXsjXqTa7xvWkc2W0UC43yUOZhwYCE6ya8YXlizysKPQsWchdzReifPXWyiqt5Sd8t7dOusLLzyUC7cTKmHRWhHwF8XW47SC33WsCPzbUCzMj0Mdkm3lcHlZXUIysEz7wqBxVFVP/sMHgqFVo1QlyotKg0=
-  - secure: qMviGIOZL7ppPPgtA3KhUTKLKkckXbJkS5jFWxnp6GE1HqN7b3+rnkUOGfXmnHdxgIhVCwPVklsLUvTE+zAApZnYkq8dmpyK5doK4jdHmRn/FEtxARN69W6VR94HpPvwqECZFUypTAAvj5fvWqLV6Eo4Each+R6N831F98GL4wk+WieSZBVUddu5elj4sV/CJ+sE0eFI1Tf4hA1m+6ytejAUmZyV0XqXI0w8IYHYtoCw+01MkgRouxtJwlE8zc6mnxqtzMaZK6MioCv4C4Lbx3hG6a5XdZutUV+TUIsYwkJrpwJLTc22F+LKQfvP5x6S9+aNwg+EivJdhdoWrwuF/FFZZP2ahJghJc3Kz7NQW6umKVP7hA7jI6cOc4bIvYzqOXFIe9jZdXCiMOd+8Ow3x5sxQYSyqrUbZ3ThFVHL+iDad0znyIz75Uxdvi0jqaeqhuqPbX+MVbAvoCKHG0LFcH26YQVK/MCV0svw/petdiRkU9LyY2Pbr0sDYBClTYfVw4UWbA+zptyWMNfzAPa7TiTZaODL/8V+Tf/4TLyHFlW6nd5teF0LDOaEmb4U8OtKg2Onc0v0ZZCy+7bk2CIVEnObOq6Eh1CuG0lr1A56l4BBT3eCnQR0YK+DE448UYv+1gQKpDat2w9LQYZ0SuV7nR+T2pxALwg3P9TI8ORYqmo=
+    - secure: qJNel4O84Wr9LT0KfzJl+7iZDpU7TvffpPRFTF/y/BOKtzJ88m5rYDEC/tIqrGGQWIX7x6Knmp3tjUc0d6qxb0UXywz9/0jjQwAa/3t58WoBfBtosfwl/e3G28Oqxg3zNuia6oFhFJumZzRD6bhjXq7vPNHrZsCyYrAErsh2GYU9NXodFiw+0mKl09+a0BcB2F9dkua0/Z5+TOfgc0UhPaDBC8+ktLKHCr5O7CTFh6s7bh3/9+mB9t4gKkbYOLEJLE8WUUwMWrhxe38KTXv3ZZNSC+0CzzB8XpRN1+3vFl2UnI9d2YO2gjJs3mJ2xsswPJN0Tww/fVnVFYbuVf4HphuWZ0e2+T3U+6MpH430xLmPYW8RWVtKaRLz0pIo6yLNAnq+aAMcC96fK6BVlt62jc6wbsw8f3TGbb72XIQsxo0WF8P/HugODdEr0s8iqQcbBA+kcNXxUl4Zud3XQgnIB7+xWGZcxgNWlvtR65ogoJOqJs/Q4AAZOK1fDQz9cb0hJEMt85V4mQbUuRgqkyXsjXqTa7xvWkc2W0UC43yUOZhwYCE6ya8YXlizysKPQsWchdzReifPXWyiqt5Sd8t7dOusLLzyUC7cTKmHRWhHwF8XW47SC33WsCPzbUCzMj0Mdkm3lcHlZXUIysEz7wqBxVFVP/sMHgqFVo1QlyotKg0=
+    - secure: qMviGIOZL7ppPPgtA3KhUTKLKkckXbJkS5jFWxnp6GE1HqN7b3+rnkUOGfXmnHdxgIhVCwPVklsLUvTE+zAApZnYkq8dmpyK5doK4jdHmRn/FEtxARN69W6VR94HpPvwqECZFUypTAAvj5fvWqLV6Eo4Each+R6N831F98GL4wk+WieSZBVUddu5elj4sV/CJ+sE0eFI1Tf4hA1m+6ytejAUmZyV0XqXI0w8IYHYtoCw+01MkgRouxtJwlE8zc6mnxqtzMaZK6MioCv4C4Lbx3hG6a5XdZutUV+TUIsYwkJrpwJLTc22F+LKQfvP5x6S9+aNwg+EivJdhdoWrwuF/FFZZP2ahJghJc3Kz7NQW6umKVP7hA7jI6cOc4bIvYzqOXFIe9jZdXCiMOd+8Ow3x5sxQYSyqrUbZ3ThFVHL+iDad0znyIz75Uxdvi0jqaeqhuqPbX+MVbAvoCKHG0LFcH26YQVK/MCV0svw/petdiRkU9LyY2Pbr0sDYBClTYfVw4UWbA+zptyWMNfzAPa7TiTZaODL/8V+Tf/4TLyHFlW6nd5teF0LDOaEmb4U8OtKg2Onc0v0ZZCy+7bk2CIVEnObOq6Eh1CuG0lr1A56l4BBT3eCnQR0YK+DE448UYv+1gQKpDat2w9LQYZ0SuV7nR+T2pxALwg3P9TI8ORYqmo=
+    - secure: "C+RfWGKmX/IyL0R6fm1CLdlTttFgkfStjSadaiWzhlcM0ica9oPi/N3qCWPVXvsy2bE8G9rScDcUw5NFMi2KgvWy6/fNHHJ7aIfVXrUYQcsSViqDVzEdUlO5sLfODHrJx3sRQsHQpSBMDYXxZi0Zq/XlvHfygibIiA+McV+2Mkutz9RDK+BHxkBcCALDATXHrqlVmcBWQ2KT9NSDR9J7SmqUUi9k6ZUZg1eSHJXYjJHbzoaWVqgB9bW6wCgTvljL5hJ3XZcb53Y0obSUcYOtDSco0COvHfz//buX0N7Vnx/uW0yg56kRvMCd+rfkpj5rcJUOTf9AAS81ffLlwS8v+Q1OD4pUmnTo+UcSR+7ifO4mx2wGvMA3ytYMXf5VwymlNIWmpDu7orKE4XE6dAr9SpkknuZyhNZVwYIaahPKuMZ5CWNm5YNeE1azoR6EreB31XLdsPsEOkSBlh7a18wB7n7OYg2gEBdwt/uNKWoKn0QMTGLuYCQAR9IB/aIWbIn9cesMrZR0NjfrKLaGqCfhQn3zhjHSIn1s2fWSsTfc0BO/fWcZN2gDmB7XzKharZ3UNlPKcjathe/5gbRry2Nt9ajLIy4UOwCr4W2rjrfIK1YcV/38NvjSU/4etwwJmUPmfdNpCZK+NZxN7jeoyqSMqzN+fSUO+DrhBWmN9H2PQes="
+
+# Setup env (extract secrets)
+before_install:
+  - openssl aes-256-cbc -K $encrypted_150e64d3bf53_key -iv $encrypted_150e64d3bf53_iv
+    -in secrets.tar.enc -out operations/secrets.tar -d
+  - tar -xvf operations/secrets.tar -C operations
+
+# Run tests
+before_script:
+  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+script:
+  - make ci
+
+# Configure deployment env
+before_deploy:
+ - nvm install node
+ - cd operations/scripts; npm install; cd ../../
+
+# Run deploy script
+deploy:
+  - provider: script
+    script: ./operations/scripts/deploy.js --branch $TRAVIS_BRANCH --env testing
+    skip_cleanup: true
+    on:
+      all_branches: true
+  - provider: script
+    script: ./operations/scripts/deploy.js --branch $TRAVIS_BRANCH --env staging
+    skip_cleanup: true
+    on:
+      branch: master
+  - provider: script
+    script: ./operations/scripts/deploy.js --tag $TRAVIS_TAG --env production
+    skip_cleanup: true
+    on:
+      tags: true
+
+# Notify slack of build status
 notifications:
   slack:
     secure: QwSscYSX1d60cEGhLN9T6CwN4tds8rFT5tpG6oWxv+OIL62wmk6i7PMtmV86VP1o2hX9VTqFqCfP4FgZEdHZKGLHo5FIhXXdaXqY4vHFQvfIrrbD6FB3b2R7YkNiu+PrQpK6cf4nzvNqXst0yEzGDOghIoIbgc13YL+aYGPSdMF+TkfnfFPD3B+WaMRVqb+G8+6s3bNKni6SP1GDGEIDi1NOFC7dzDzhWmvD1ysKMpPuBZGQ6HTgXXjT1TfLArjyHmsWcbLschRFM5Ies+4Ukw8At/szYdjXD7VWRN9EXKLFmqUnkkTVLN7VZGN+SxNm5iiSMqgx5jxxqpmQLqAxNAxd2pLWGg4urCI6JlHztXDA6rWPJqcbrLRW+K5DUHJUCMV7TxwVgaryVIrnFYRX/WGO4B4KDhk1QcBBjdcgM+YCpvsXaM3j+EdTOSnqTm11BmlOGSYZZk82Cb9TCdhCKC52HxWRBZeG2LJ9VeHCcW2eqeOXoK1pLCz6y52QEzxrgolgcHksl9tlmjhVYH5dGGL99NNcuHLM7b8Ep7h8va3IRIWgbAzYV4IPGpPuhjn63B829piBnn0Ci/OMhyi+bgsZcDUFqeesw5zwqw4hR7FKinsCSWYnlhFy8BVtwvKay6A0LSE76w20J3xqtNh49liNU+4k7/dljTiUojAH1q8=
