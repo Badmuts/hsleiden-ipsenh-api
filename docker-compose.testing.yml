@@ -1,0 +1,22 @@
+version: "2.1"
+
+services: 
+  api:
+    image: badmuts/hsleiden-ipsenh-api:${CURRENT}
+    ports:
+      - 8080
+    labels:
+      - "traefik.backend=api-testing-${TRAVIS_BRANCH}"
+      - "traefik.frontend.rule=Host:${TRAVIS_BRANCH}.api.ipsenh.daan.codes"
+      - "traefik.enable=true"
+      - "traefik.port=8080"
+    restart: unless-stopped
+  
+  db:
+    restart: unless-stopped
+    image: mongo:3.4
+
+networks:
+  default:
+    external:
+      name: api
