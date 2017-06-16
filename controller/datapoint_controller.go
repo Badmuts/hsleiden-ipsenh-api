@@ -108,23 +108,15 @@ func (ctrl *DatapointController) create(res http.ResponseWriter, req *http.Reque
 
 func (ctrl *DatapointController) CalculateAndUpdateRoomOccupation(o model.OccupationSensor, r model.Room) (info *mgo.ChangeInfo, err error) {
 	entrances := o.CalculateEntrances()
-	log.Printf("entrances: %s", entrances)
-
 	exits := o.CalculateExits()
-	log.Printf("exits: %s", exits)
 
 	tmpOccupation := (r.Occupation - exits)
-
 	r.Occupation = tmpOccupation + entrances
-	log.Printf("occupation %s", r.Occupation)
 
-	log.Printf("Room %s", r)
-	// log.Printf("Database %s", ctrl.db)
-	// info, err = ctrl.db.C("room").UpsertId(r.ID, r)
-
-	// if err != nil {
-	// 	return info, err
-	// }
+	info, err = ctrl.db.C("room").UpsertId(r.ID, r)
+	if err != nil {
+		return info, err
+	}
 
 	roomLog := &RoomLog{}
 	roomLog.ID = bson.NewObjectId()
