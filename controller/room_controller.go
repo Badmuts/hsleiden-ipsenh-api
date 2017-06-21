@@ -67,7 +67,7 @@ func (ctrl *RoomController) Update(res http.ResponseWriter, req *http.Request) {
 	dec := json.NewDecoder(req.Body)
 	err = dec.Decode(&Room)
 	if err != nil {
-		ctrl.r.JSON(res, http.StatusBadRequest, errors.New("Bad Request"))
+		ctrl.r.JSON(res, http.StatusBadRequest, errors.New("Invalid JSON"))
 		return
 	}
 
@@ -86,7 +86,7 @@ func (ctrl *RoomController) CreateRoster(res http.ResponseWriter, req *http.Requ
 	dec := json.NewDecoder(req.Body)
 	err := dec.Decode(&RoomRosters)
 	if err != nil {
-		ctrl.r.JSON(res, http.StatusBadRequest, errors.New("Bad Request"))
+		ctrl.r.JSON(res, http.StatusBadRequest, errors.New("Invalid JSON"))
 		return
 	}
 
