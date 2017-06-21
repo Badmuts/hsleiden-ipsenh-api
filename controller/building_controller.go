@@ -38,6 +38,7 @@ func (ctrl *BuildingController) Register() {
 	ctrl.router.HandleFunc("/buildings", ctrl.CreateBuilding).Name("buildings.create").Methods("POST")
 	ctrl.router.HandleFunc("/buildings/{id}", ctrl.FindBuildingId).Name("buildings.findId").Methods("GET")
 	ctrl.router.HandleFunc("/buildings/{id}", ctrl.UpdateBuilding).Name("buildings.update").Methods("PUT", "PATCH")
+	ctrl.router.HandleFunc("/buildings/{id}", ctrl.Remove).Name("building.remove").Methods("DELETE")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms", ctrl.roomCtrl.Create).Name("buildings.rooms.create").Methods("POST")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms", ctrl.roomCtrl.Find).Name("buildings.rooms.find").Methods("GET")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms/{roomID}", ctrl.roomCtrl.FindRoomID).Name("buildings.rooms.findId").Methods("GET")
@@ -123,4 +124,19 @@ func (ctrl *BuildingController) UpdateBuilding(res http.ResponseWriter, req *htt
 	}
 
 	ctrl.r.JSON(res, http.StatusOK, Building)
+}
+
+func (ctrl *BuildingController) Remove(res http.ResponseWriter, req *http.Request) {
+	ID := bson.ObjectIdHex(mux.Vars(req)["id"])
+	err := ctrl.db.C("building").RemoveId(ID)
+
+	if err == mgo.ErrNotFound {
+		ctrl.r.JSON(res, http.StatusNotFound, NewControllerError("404", "Could not find resource", "Buidling not found", ""))
+		return
+	} else if err != nil {
+		ctrl.r.JSON(res, http.StatusInternalServerError, NewControllerError("500", err.Error(), "Could not remove building, internal server error", ""))
+		return
+	}
+
+	ctrl.r.JSON(res, http.StatusOK, struct{}{})
 }
