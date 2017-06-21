@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // HubController represents the controller instance
@@ -33,6 +34,7 @@ func (ctrl *HubController) Register() {
 	ctrl.router.HandleFunc("/hubs", ctrl.find).Name("hubs.find").Methods("GET")
 	ctrl.router.HandleFunc("/hubs/{id}", ctrl.findOne).Name("hubs.findOne").Methods("GET")
 	ctrl.router.HandleFunc("/hubs/{id}", ctrl.update).Name("hubs.findOne").Methods("PUT", "PATCH")
+	ctrl.router.HandleFunc("/hubs/{id}", ctrl.remove).Name("hubs.remove").Methods("DELETE")
 }
 
 func (ctrl *HubController) create(res http.ResponseWriter, req *http.Request) {
@@ -87,4 +89,19 @@ func (ctrl *HubController) update(res http.ResponseWriter, req *http.Request) {
 	}
 
 	ctrl.r.JSON(res, http.StatusOK, newHub)
+}
+
+func (ctrl *HubController) remove(res http.ResponseWriter, req *http.Request) {
+	ID := bson.ObjectIdHex(mux.Vars(req)["id"])
+	err := ctrl.db.C("hub").RemoveId(ID)
+
+	if err == mgo.ErrNotFound {
+		ctrl.r.JSON(res, http.StatusNotFound, NewControllerError("404", err.Error(), "Hub not found", ""))
+		return
+	} else if err != nil {
+		ctrl.r.JSON(res, http.StatusInternalServerError, NewControllerError("500", err.Error(), "Hub could not be removed", ""))
+		return
+	}
+
+	ctrl.r.JSON(res, http.StatusOK, struct{}{})
 }
