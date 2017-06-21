@@ -3,7 +3,6 @@ package controller
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
 
 	"github.com/badmuts/hsleiden-ipsenh-api/model"
@@ -42,10 +41,10 @@ func (ctrl *RoomController) FindRoomID(res http.ResponseWriter, req *http.Reques
 	Room := model.NewRoomModel(ctrl.db)
 	room, err := Room.FindId(roomID)
 	if err == mgo.ErrNotFound {
-		ctrl.r.JSON(res, http.StatusNotFound, room)
+		ctrl.r.JSON(res, http.StatusNotFound, NewControllerError("404", "Can't find room due to db error (enable mgo logging)", "Could not find room", "more info"))
 		return
 	} else if err != nil {
-		ctrl.r.JSON(res, http.StatusInternalServerError, room)
+		ctrl.r.JSON(res, http.StatusInternalServerError, NewControllerError("500", "Can't find room due to db error (enable mgo logging)", "Can't find room", "more info"))
 		return
 	}
 
@@ -60,20 +59,20 @@ func (ctrl *RoomController) Update(res http.ResponseWriter, req *http.Request) {
 		ctrl.r.JSON(res, http.StatusNotFound, Room)
 		return
 	} else if err != nil {
-		ctrl.r.JSON(res, http.StatusInternalServerError, err)
+		ctrl.r.JSON(res, http.StatusInternalServerError, NewControllerError("500", "Can't update due to db error (enable mgo logging)", "Can't update room", "more info"))
 		return
 	}
 
 	dec := json.NewDecoder(req.Body)
 	err = dec.Decode(&Room)
 	if err != nil {
-		ctrl.r.JSON(res, http.StatusBadRequest, errors.New("Invalid JSON"))
+		ctrl.r.JSON(res, http.StatusBadRequest, NewControllerError("400", "Can't decode due to invalid json", "Invalid json", "more info"))
 		return
 	}
 
 	Room, err = Room.Save()
 	if err != nil {
-		ctrl.r.JSON(res, http.StatusInternalServerError, errors.New("Could not update room"))
+		ctrl.r.JSON(res, http.StatusInternalServerError, NewControllerError("500", "Can't UpSert due to db error (enable mgo logging)", "Could not save room", "more info"))
 		return
 	}
 
@@ -86,7 +85,7 @@ func (ctrl *RoomController) CreateRoster(res http.ResponseWriter, req *http.Requ
 	dec := json.NewDecoder(req.Body)
 	err := dec.Decode(&RoomRosters)
 	if err != nil {
-		ctrl.r.JSON(res, http.StatusBadRequest, errors.New("Invalid JSON"))
+		ctrl.r.JSON(res, http.StatusBadRequest, NewControllerError("400", "Can't decode due to invalid json", "Invalid json", "more info"))
 		return
 	}
 
@@ -98,7 +97,7 @@ func (ctrl *RoomController) CreateRoster(res http.ResponseWriter, req *http.Requ
 
 		err = ctrl.db.C("room_reservation").Insert(RoomRosters[index])
 		if err != nil {
-			ctrl.r.JSON(res, http.StatusInternalServerError, errors.New("Could not save reservation"))
+			ctrl.r.JSON(res, http.StatusInternalServerError, NewControllerError("500", "Can't insert due to db error (enable mgo logging)", "Could not save reservation", "more info"))
 			return
 		}
 	}
@@ -111,8 +110,7 @@ func (ctrl *RoomController) Find(res http.ResponseWriter, req *http.Request) {
 	room := model.NewRoomModel(ctrl.db)
 	rooms, err := room.Find(building_id)
 	if err != nil {
-		log.Fatal("could not retrieve rooms: ", err)
-		ctrl.r.JSON(res, http.StatusInternalServerError, err)
+		ctrl.r.JSON(res, http.StatusInternalServerError, NewControllerError("500", "Can't find due to db error (enable mgo logging)", "Can't find room", "more info"))
 		return
 	}
 
@@ -125,7 +123,7 @@ func (ctrl *RoomController) Create(res http.ResponseWriter, req *http.Request) {
 	dec := json.NewDecoder(req.Body)
 	err := dec.Decode(&Room)
 	if err != nil {
-		ctrl.r.JSON(res, http.StatusInternalServerError, errors.New("Invalid json"))
+		ctrl.r.JSON(res, http.StatusBadRequest, NewControllerError("400", "Can't decode due to invalid json", "Invalid json", "more info"))
 		return
 	}
 
