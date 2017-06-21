@@ -40,6 +40,7 @@ func (ctrl *BuildingController) Register() {
 	ctrl.router.HandleFunc("/buildings/{id}/rooms", ctrl.FindRooms).Name("buildings.rooms.find").Methods("GET")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms/{roomID}", ctrl.FindRoomID).Name("rooms.findId").Methods("GET")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms/{roomID}", ctrl.UpdateRoom).Name("rooms.update").Methods("PUT", "PATCH")
+	ctrl.router.HandleFunc("/buildings/{id}/rooms/{roomID}/roster", ctrl.CreateRoster).Name("rooms.createRoster").Methods("POST")
 }
 
 func (ctrl *BuildingController) FindBuilding(res http.ResponseWriter, req *http.Request) {
@@ -70,6 +71,28 @@ func (ctrl *BuildingController) CreateBuilding(res http.ResponseWriter, req *htt
 	}
 
 	ctrl.r.JSON(res, http.StatusCreated, Building)
+}
+
+func (ctrl *BuildingController) CreateRoster(res http.ResponseWriter, req *http.Request) {
+	ID := bson.ObjectIdHex(mux.Vars(req)["roomID"])
+	RoomRosters := []model.RoomRoster{}
+	dec := json.NewDecoder(req.Body)
+	err := dec.Decode(&RoomRosters)
+	if err != nil {
+		ctrl.r.JSON(res, http.StatusInternalServerError, errors.New("Invalid json"))
+		return
+	}
+
+	for index := range RoomRosters {
+		if RoomRosters[index].ID == "" {
+			RoomRosters[index].ID = bson.NewObjectId()
+		}
+		RoomRosters[index].RoomID = ID
+
+		err = ctrl.db.C("room_reservation").Insert(RoomRosters[index])
+	}
+
+	ctrl.r.JSON(res, http.StatusCreated, RoomRosters)
 }
 
 // TODO move to RoomCtrl
