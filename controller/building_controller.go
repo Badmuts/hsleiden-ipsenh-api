@@ -8,6 +8,8 @@ import (
 
 	"log"
 
+	"strconv"
+
 	"github.com/badmuts/hsleiden-ipsenh-api/model"
 	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
@@ -36,6 +38,7 @@ func (ctrl *BuildingController) Register() {
 	ctrl.router.HandleFunc("/buildings", ctrl.CreateBuilding).Name("buildings.create").Methods("POST")
 	ctrl.router.HandleFunc("/buildings/{id}", ctrl.FindBuildingId).Name("buildings.findId").Methods("GET")
 	ctrl.router.HandleFunc("/buildings/{id}", ctrl.UpdateBuilding).Name("buildings.update").Methods("PUT", "PATCH")
+	ctrl.router.HandleFunc("/buildings/{id}", ctrl.Remove).Name("building.remove").Methods("DELETE")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms", ctrl.CreateRoom).Name("buildings.rooms.create").Methods("POST")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms", ctrl.FindRooms).Name("buildings.rooms.find").Methods("GET")
 	ctrl.router.HandleFunc("/buildings/{id}/rooms/{roomID}", ctrl.FindRoomID).Name("rooms.findId").Methods("GET")
@@ -180,4 +183,31 @@ func (ctrl *BuildingController) UpdateRoom(res http.ResponseWriter, req *http.Re
 	}
 
 	ctrl.r.JSON(res, http.StatusOK, Room)
+}
+
+func (ctrl *BuildingController) Remove(res http.ResponseWriter, req *http.Request) {
+	ID := bson.ObjectIdHex(mux.Vars(req)["id"])
+	err := ctrl.db.C("building").RemoveId(ID)
+
+	if err == mgo.ErrNotFound {
+		ctrl.r.JSON(res, http.StatusNotFound, struct {
+			Status  string `json:status`
+			Message string `json:message`
+		}{
+			Status:  strconv.Itoa(http.StatusNotFound),
+			Message: err.Error(),
+		})
+	} else if err != nil {
+		log.Printf("BuildingController Remove InternalServerError: %s", err)
+		ctrl.r.JSON(res, http.StatusInternalServerError, struct {
+			Status  string `json:status`
+			Message string `json:message`
+		}{
+			Status:  strconv.Itoa(http.StatusInternalServerError),
+			Message: err.Error(),
+		})
+		return
+	}
+
+	ctrl.r.JSON(res, http.StatusOK, struct{}{})
 }
