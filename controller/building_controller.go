@@ -8,8 +8,6 @@ import (
 
 	"log"
 
-	"strconv"
-
 	"github.com/badmuts/hsleiden-ipsenh-api/model"
 	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
@@ -133,22 +131,10 @@ func (ctrl *BuildingController) Remove(res http.ResponseWriter, req *http.Reques
 	err := ctrl.db.C("building").RemoveId(ID)
 
 	if err == mgo.ErrNotFound {
-		ctrl.r.JSON(res, http.StatusNotFound, struct {
-			Status  string `json:status`
-			Message string `json:message`
-		}{
-			Status:  strconv.Itoa(http.StatusNotFound),
-			Message: err.Error(),
-		})
+		ctrl.r.JSON(res, http.StatusNotFound, NewControllerError("404", "Could not find resource", "Buidling not found", ""))
+		return
 	} else if err != nil {
-		log.Printf("BuildingController Remove InternalServerError: %s", err)
-		ctrl.r.JSON(res, http.StatusInternalServerError, struct {
-			Status  string `json:status`
-			Message string `json:message`
-		}{
-			Status:  strconv.Itoa(http.StatusInternalServerError),
-			Message: err.Error(),
-		})
+		ctrl.r.JSON(res, http.StatusInternalServerError, NewControllerError("500", err.Error(), "Could not remove building, internal server error", ""))
 		return
 	}
 
