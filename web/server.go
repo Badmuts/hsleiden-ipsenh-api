@@ -30,7 +30,8 @@ func NewServer() *Server {
 	controller.NewHubController(router, r, db)
 	controller.NewDatapointController(router, r, db)
 	controller.NewSensorController(router, r, db)
-	controller.NewBuildingController(router, r, db)
+	controller.NewBuildingController(router, r, db, controller.NewRoomController(router, r, db))
+	controller.NewRoomController(router, r, db)
 
 	server := Server{negroni.Classic()}
 	server.Use(c)
