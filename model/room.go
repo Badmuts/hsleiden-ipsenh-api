@@ -16,7 +16,7 @@ type Room struct {
 	Occupation  int           `json:"occupation" bson:"occupation"`
 	// Hubs        []Hub           `json:"hubs" bson:"-"`
 	HubIDs      []bson.ObjectId `json:"-" bson:"hubs,omitempty"`
-	BuildingID  bson.ObjectId   `json:"-" bson:"building,omitempty"`
+	BuildingID  bson.ObjectId   `json:"building" bson:"building,omitempty"`
 	db          *mgo.Database
 	RoomLogs    []RoomLog       `json:"logs" bson:"-"`
 	RoomRosters []RoomRoster    `json:"roster" bson:"-"`
@@ -77,4 +77,21 @@ func (r *Room) FindId(ID bson.ObjectId) (room *Room, err error) {
 	err = r.db.C("room_reservation").Find(bson.M{"room": bson.ObjectId(ID)}).All(&room.RoomRosters)
 
 	return room, err
+}
+
+func (r *Room) Find(buildingID string) (rooms []Room, err error) {
+
+	if bson.IsObjectIdHex(buildingID) {
+		building := bson.ObjectIdHex(buildingID)
+		log.Printf("%s building", building)
+		err = r.db.C("room").Find(bson.M{"building": building}).All(&rooms)
+	} else {
+		err = r.rooms.Find(bson.M{}).Limit(25).All(&rooms)
+	}
+
+	for index := range rooms {
+		rooms[index].db = r.db
+	}
+
+	return rooms, err
 }
