@@ -83,7 +83,6 @@ func (r *Room) Find(buildingID string) (rooms []Room, err error) {
 
 	if bson.IsObjectIdHex(buildingID) {
 		building := bson.ObjectIdHex(buildingID)
-		log.Printf("%s building", building)
 		err = r.db.C("room").Find(bson.M{"building": building}).All(&rooms)
 	} else {
 		err = r.rooms.Find(bson.M{}).Limit(25).All(&rooms)
