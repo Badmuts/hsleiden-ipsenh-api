@@ -22,12 +22,12 @@ type BuildingController struct {
 	roomCtrl *RoomController
 }
 
-func NewBuildingController(router *mux.Router, r *render.Render, db *mgo.Database) *BuildingController {
+func NewBuildingController(router *mux.Router, r *render.Render, db *mgo.Database, roomCtrl *RoomController) *BuildingController {
 	ctrl := &BuildingController{
 		router:   router,
 		r:        r,
 		db:       db,
-		roomCtrl: NewRoomController(router, r, db),
+		roomCtrl: roomCtrl,
 	}
 	ctrl.Register()
 	return ctrl
