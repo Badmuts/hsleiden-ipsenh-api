@@ -116,7 +116,7 @@ createDeployment()
             ${awsInstance} "mkdir .deploy/; \
             cat > .deploy/docker-compose.yml; \
             TRAVIS_BRANCH=${travisBranch} CURRENT=${current} docker-compose -p ${composeProjectName} -f .deploy/docker-compose.yml up -d; \
-            rm -rf .deploy/"`, { silent: true }, function(
+            rm -rf .deploy/"`, { silent: false }, function(
       // Default behaviour prints everything to console
       code,
       stdout,
