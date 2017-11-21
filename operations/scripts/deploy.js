@@ -51,7 +51,7 @@ var github = axios.create({
 });
 
 var slackHookEndpoint =
-  "https://hooks.slack.com/services/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";
+  "https://hooks.slack.com/services/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";
 var slack = data => axios.post(slackHookEndpoint, data);
 
 // @todo Check for PRs/pushes
