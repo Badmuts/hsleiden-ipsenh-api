@@ -6,10 +6,10 @@ services:
     ports:
       - 8080
     labels:
-      - "traefik.backend=api-production"
-      - "traefik.frontend.rule=Host:api.ipsenh.daan.codes"
-      - "traefik.enable=true"
-      - "traefik.port=8080"
+      traefik.backend: "api-production"
+      traefik.frontend.rule: "Host:api.ipsenh.daan.codes"
+      traefik.enable: "true"
+      traefik.port: "8080"
     restart: unless-stopped
   
   db:
