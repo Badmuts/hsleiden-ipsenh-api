@@ -15,7 +15,7 @@ var chalk = require("chalk");
 var yargs = require("yargs").argv;
 var log = console.log;
 
-var awsInstance = "ec2-35-158-19-66.eu-central-1.compute.amazonaws.com";
+var awsInstance = "ec2-18-194-176-163.eu-central-1.compute.amazonaws.com";
 var travisBranch = yargs.branch;
 var current = yargs.tag;
 var env = yargs.env;
