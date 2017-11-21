@@ -15,7 +15,7 @@ var chalk = require("chalk");
 var yargs = require("yargs").argv;
 var log = console.log;
 
-var awsInstance = "ec2-35-158-19-66.eu-central-1.compute.amazonaws.com";
+var awsInstance = "ec2-18-194-176-163.eu-central-1.compute.amazonaws.com";
 var travisBranch = yargs.branch;
 var current = yargs.tag;
 var env = yargs.env;
@@ -51,7 +51,7 @@ var github = axios.create({
 });
 
 var slackHookEndpoint =
-  "https://hooks.slack.com/services/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";
+  "https://hooks.slack.com/services/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";
 var slack = data => axios.post(slackHookEndpoint, data);
 
 // @todo Check for PRs/pushes
@@ -116,7 +116,7 @@ createDeployment()
             ${awsInstance} "mkdir .deploy/; \
             cat > .deploy/docker-compose.yml; \
             TRAVIS_BRANCH=${travisBranch} CURRENT=${current} docker-compose -p ${composeProjectName} -f .deploy/docker-compose.yml up -d; \
-            rm -rf .deploy/"`, { silent: true }, function(
+            rm -rf .deploy/"`, { silent: false }, function(
       // Default behaviour prints everything to console
       code,
       stdout,

@@ -1,51 +1,39 @@
 language: go
 sudo: required
 services:
-  - docker
-
-# Setup env vars
-env:
-  global:
-    - secure: qJNel4O84Wr9LT0KfzJl+7iZDpU7TvffpPRFTF/y/BOKtzJ88m5rYDEC/tIqrGGQWIX7x6Knmp3tjUc0d6qxb0UXywz9/0jjQwAa/3t58WoBfBtosfwl/e3G28Oqxg3zNuia6oFhFJumZzRD6bhjXq7vPNHrZsCyYrAErsh2GYU9NXodFiw+0mKl09+a0BcB2F9dkua0/Z5+TOfgc0UhPaDBC8+ktLKHCr5O7CTFh6s7bh3/9+mB9t4gKkbYOLEJLE8WUUwMWrhxe38KTXv3ZZNSC+0CzzB8XpRN1+3vFl2UnI9d2YO2gjJs3mJ2xsswPJN0Tww/fVnVFYbuVf4HphuWZ0e2+T3U+6MpH430xLmPYW8RWVtKaRLz0pIo6yLNAnq+aAMcC96fK6BVlt62jc6wbsw8f3TGbb72XIQsxo0WF8P/HugODdEr0s8iqQcbBA+kcNXxUl4Zud3XQgnIB7+xWGZcxgNWlvtR65ogoJOqJs/Q4AAZOK1fDQz9cb0hJEMt85V4mQbUuRgqkyXsjXqTa7xvWkc2W0UC43yUOZhwYCE6ya8YXlizysKPQsWchdzReifPXWyiqt5Sd8t7dOusLLzyUC7cTKmHRWhHwF8XW47SC33WsCPzbUCzMj0Mdkm3lcHlZXUIysEz7wqBxVFVP/sMHgqFVo1QlyotKg0=
-    - secure: qMviGIOZL7ppPPgtA3KhUTKLKkckXbJkS5jFWxnp6GE1HqN7b3+rnkUOGfXmnHdxgIhVCwPVklsLUvTE+zAApZnYkq8dmpyK5doK4jdHmRn/FEtxARN69W6VR94HpPvwqECZFUypTAAvj5fvWqLV6Eo4Each+R6N831F98GL4wk+WieSZBVUddu5elj4sV/CJ+sE0eFI1Tf4hA1m+6ytejAUmZyV0XqXI0w8IYHYtoCw+01MkgRouxtJwlE8zc6mnxqtzMaZK6MioCv4C4Lbx3hG6a5XdZutUV+TUIsYwkJrpwJLTc22F+LKQfvP5x6S9+aNwg+EivJdhdoWrwuF/FFZZP2ahJghJc3Kz7NQW6umKVP7hA7jI6cOc4bIvYzqOXFIe9jZdXCiMOd+8Ow3x5sxQYSyqrUbZ3ThFVHL+iDad0znyIz75Uxdvi0jqaeqhuqPbX+MVbAvoCKHG0LFcH26YQVK/MCV0svw/petdiRkU9LyY2Pbr0sDYBClTYfVw4UWbA+zptyWMNfzAPa7TiTZaODL/8V+Tf/4TLyHFlW6nd5teF0LDOaEmb4U8OtKg2Onc0v0ZZCy+7bk2CIVEnObOq6Eh1CuG0lr1A56l4BBT3eCnQR0YK+DE448UYv+1gQKpDat2w9LQYZ0SuV7nR+T2pxALwg3P9TI8ORYqmo=
-    - secure: "C+RfWGKmX/IyL0R6fm1CLdlTttFgkfStjSadaiWzhlcM0ica9oPi/N3qCWPVXvsy2bE8G9rScDcUw5NFMi2KgvWy6/fNHHJ7aIfVXrUYQcsSViqDVzEdUlO5sLfODHrJx3sRQsHQpSBMDYXxZi0Zq/XlvHfygibIiA+McV+2Mkutz9RDK+BHxkBcCALDATXHrqlVmcBWQ2KT9NSDR9J7SmqUUi9k6ZUZg1eSHJXYjJHbzoaWVqgB9bW6wCgTvljL5hJ3XZcb53Y0obSUcYOtDSco0COvHfz//buX0N7Vnx/uW0yg56kRvMCd+rfkpj5rcJUOTf9AAS81ffLlwS8v+Q1OD4pUmnTo+UcSR+7ifO4mx2wGvMA3ytYMXf5VwymlNIWmpDu7orKE4XE6dAr9SpkknuZyhNZVwYIaahPKuMZ5CWNm5YNeE1azoR6EreB31XLdsPsEOkSBlh7a18wB7n7OYg2gEBdwt/uNKWoKn0QMTGLuYCQAR9IB/aIWbIn9cesMrZR0NjfrKLaGqCfhQn3zhjHSIn1s2fWSsTfc0BO/fWcZN2gDmB7XzKharZ3UNlPKcjathe/5gbRry2Nt9ajLIy4UOwCr4W2rjrfIK1YcV/38NvjSU/4etwwJmUPmfdNpCZK+NZxN7jeoyqSMqzN+fSUO+DrhBWmN9H2PQes="
-
-# Setup env (extract secrets)
+- docker
 before_install:
-  - openssl aes-256-cbc -K $encrypted_150e64d3bf53_key -iv $encrypted_150e64d3bf53_iv
-    -in secrets.tar.enc -out operations/secrets.tar -d
-  - tar -xvf operations/secrets.tar -C operations
-
-# Run tests
+- openssl aes-256-cbc -K $encrypted_150e64d3bf53_key -iv $encrypted_150e64d3bf53_iv
+  -in secrets.tar.enc -out operations/secrets.tar -d
+- tar -xvf operations/secrets.tar -C operations
 before_script:
-  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+- docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 script:
-  - make ci
-
-# Configure deployment env
+- make ci
 before_deploy:
- - nvm install node
- - cd operations/scripts; npm install; cd ../../
-
-# Run deploy script
+- nvm install node
+- cd operations/scripts; npm install; cd ../../
 deploy:
-  - provider: script
-    script: ./operations/scripts/deploy.js --branch $TRAVIS_BRANCH --env testing
-    skip_cleanup: true
-    on:
-      all_branches: true
-  - provider: script
-    script: ./operations/scripts/deploy.js --branch $TRAVIS_BRANCH --env staging
-    skip_cleanup: true
-    on:
-      branch: master
-  - provider: script
-    script: ./operations/scripts/deploy.js --tag $TRAVIS_TAG --env production
-    skip_cleanup: true
-    on:
-      tags: true
-
-# Notify slack of build status
+- provider: script
+  script: "./operations/scripts/deploy.js --branch $TRAVIS_BRANCH --env testing"
+  skip_cleanup: true
+  on:
+    all_branches: true
+- provider: script
+  script: "./operations/scripts/deploy.js --branch $TRAVIS_BRANCH --env staging"
+  skip_cleanup: true
+  on:
+    branch: master
+- provider: script
+  script: "./operations/scripts/deploy.js --tag $TRAVIS_TAG --env production"
+  skip_cleanup: true
+  on:
+    tags: true
 notifications:
   slack:
-    secure: QwSscYSX1d60cEGhLN9T6CwN4tds8rFT5tpG6oWxv+OIL62wmk6i7PMtmV86VP1o2hX9VTqFqCfP4FgZEdHZKGLHo5FIhXXdaXqY4vHFQvfIrrbD6FB3b2R7YkNiu+PrQpK6cf4nzvNqXst0yEzGDOghIoIbgc13YL+aYGPSdMF+TkfnfFPD3B+WaMRVqb+G8+6s3bNKni6SP1GDGEIDi1NOFC7dzDzhWmvD1ysKMpPuBZGQ6HTgXXjT1TfLArjyHmsWcbLschRFM5Ies+4Ukw8At/szYdjXD7VWRN9EXKLFmqUnkkTVLN7VZGN+SxNm5iiSMqgx5jxxqpmQLqAxNAxd2pLWGg4urCI6JlHztXDA6rWPJqcbrLRW+K5DUHJUCMV7TxwVgaryVIrnFYRX/WGO4B4KDhk1QcBBjdcgM+YCpvsXaM3j+EdTOSnqTm11BmlOGSYZZk82Cb9TCdhCKC52HxWRBZeG2LJ9VeHCcW2eqeOXoK1pLCz6y52QEzxrgolgcHksl9tlmjhVYH5dGGL99NNcuHLM7b8Ep7h8va3IRIWgbAzYV4IPGpPuhjn63B829piBnn0Ci/OMhyi+bgsZcDUFqeesw5zwqw4hR7FKinsCSWYnlhFy8BVtwvKay6A0LSE76w20J3xqtNh49liNU+4k7/dljTiUojAH1q8=
+    secure: NTn5LCfWtig6PKkTagAUHo/zycvdPqI8QT/21K46L//UL48ZawIYUbEHwz1cvEQl3kgUj4Cq7DudzMLNm+y5JLCbSaZSrdVLOXmp89o/2o1nNHNhd1+ewhc+94Ue9FnAIcBeBKcbA5ZLZ2o/rQfp5bzBLuVkug9EB/UW402G+87FLxgdvMqTbu7oHl4X5LJxRulduWo/UCrBvSqDB2IbBMz3dSSnPn5sn5Xtcch0v25PQV/rKcG0VZs+Y6tfmkwvi7bj5XlXfD9uFjYn3C4+u4s0gubYZuotZMKh/mo5o1FoJibAZKsLcOEKl6JGisHWtT4TtU13btF7mrWmihyjqBgCJrXBT3lX+5khBAT2QHpYjJuoOsfsPL0MawUWGMYUdaOIyHw9Qp+TsSezMaf/Fai69Hh0AJ8ziDERu9eIBRTX49twdtMuUFNF8WNKtbUWGrM0/sg3QZCB1/1zcSYU2cTm6Kn+wyYIHX7LD+lEl9VhhDGuTjSCJnc2AiivxtL7GjEBUo9p0VxCFAmhI38S3AawzogTqj5PZ8cyZh2KLrBHppnBBI5LqkF8Y+F0oV1DbagJ21fe1X0j+lKasxyUgSaGROv8mIUD23GlnGk8GOYYU1z8qqRRUXkWlIf1RcnRVy/gEri8K8viG/WVvxIvQs513hEY2L8pH7LfvNxTJlE=
+env:
+  global:
+  - secure: FaW9bDlX8SpkOY8oDQLcYdIeSLwbQl5zrouuJMKfGbffQDSPOXINSYWgCACGJhvnxFAiknPPUHDEG40ERl1kePnEhwmHf8HJ4jDfgiwUhAJZJ0RCRGoLLs52dq1x0jBxp8kG2uDPJNzSYDgo9QgpIDI3fLS2RlCGqZh22o268AJI4IatLu8luokWKETlxQ5X29fdyXK31Jc6oUuygDiL5ZecmQuj+cJWFWaAP7pk5eVCDSzARTTiSssZ24+n0yat7fmkv7hlXycxzqsHLXyM4+3TAeqS6kGSaZgN/S9Ugy6snlIAJ8zQoY5Z4tr8JRiH6E4zv07l3jaR5NwOgEuRdkhA4m8QUFmyMQ219B2c0OqLL/MLM2iGECVDZqYq6HdPHuA0u4ldEMJg62OI5L31lrgRdRjrOozZJtLezv6O3GOovtDEalJ3bmB/31lwe24bPz7clElTDR4kybsT9GXJwwLW7fNo0c1vfPZWeJZN6XpY5VS6hupkOVOVSxjewzqzLgmHwyXnvriF+/pub8EtuBS6aM3iyKDSfpyRSL6AomHkynupNf21EnfxW79ziHWOMhPnTe+wT4/Dii0OGJrMdIgtsWXcwnL7PRyRC+AaeJZNMQ7OvE5L8YWkHI9asOs5qyr+eJQP05HlP/HC5jSn/b+WzfQ7NGsSu0CQaBs6rbw=
+  - secure: qoV3EJqZA2UBkLRLEECOsRblR/S8B238lbbyVVkXXM27Bf0NIxn7FYpHRvXzTHSsIFLHEvsFKbfV9PDzNVipYxAio/mKIUnPX3Kd3CzHCGLr7rrtvx9rUyAj0l8mbkN/XJcNVWlTjvhqxarJRo8AJPtnWj9zsXnSTyDNdcBkxKd2syf7JTkWyBgGX4KlSuaZ5ILynpu7w26rwnC5thxh+UXCoUtukYlBvKh8P90aF1MkNH8WdNygZmPSAFHwkCgwlUaRSWeSMwpeDYinOUb/PL7R4nAgTtTKcc0lmZcA1VUcvTgbzbi01xd2tBy3GdDzWPIaz5Q8ZSQxg5+GFf7cSP52Ewck1ByMwixM0B34q+HOgehebVgFPP8h670EsPEVaaYeQchoOrn4h91Glkrt52yy3xnPO4rS0IvUO6C2FJIUBMLvZPoZKschNVtdfadMw80Q7iAKUj6HAu5htq7LpvroZr1zv/cLIJ6Fmnwe27C5sn0m49KCxUNSRop1U2vTPmXpD3XBKVcAUwK7lhYnvydH9Fz4wDw24G848QQCsAGGt3CgwqwL4IUMT6+ZGA+mTwthdxbQ8nJnqgJDiZ1//OFKztqopuWap2AJrV17LDQaTnTWn3PuEmXqoWXHh5x2ligQwyOO6/LAjGubDJQyc9CnsJx8vlceTegJ3Y0YwyQ=
+  - secure: kCAqMGbuaiPsNQUWy1vVseCPrlNKPi7HhyUzHCDzJi68H/9Vklzfq+Mc6qVXsA5O9ecV9g1O51CfpTRq8nN/zFaZPfBrnfFeTR5+1sTMBhT1pydeOgOgRA1w4wT0SMRE/oLdbuX74tJw/BUdSKPJnPmw5vVRVV8HpNeYsH2N9zr+1637vLKUOE419dQxdsVzcLDshkYgTyb1jqn3WD+NJNChmTG96qpz880fYQbiIddGDZdrDF8Ic48+uLC22rIz24TPHLlmwyMAV+aHQIvr6+GWPO++W6IOWDx+efsZZHXAAJ+wGVqGukxUx53HvhQK0bNcQOlt1WpEJ5FEJde+OyHmc00uFKXKU+am4XOCvMnBEhDoQRzZkyh7iAMeBGSA8prHgFUvGd9hMsQLCbLyJqIIBYC9jo4xLj0lqZ5f+dm+sMucHNJfLiZlZm99Wih90cXUhOCG2BtlDRVm/77ymAj9mjm3gp3KzXVICWFIRp9H+Z8gvWofwdNx8rRAKn1aUN619SqZbg7GWbLD64EkQwix28TJpRf+LIR37vnRFC26FW4kpazcmwSRoXRx455HnxBbyNgmN3uj8K5e5LieneEwcNZG7oU2RMQvj1zQCV1sA7I7hiGFyX/xgh5XbHQKpx9PIRBxflRJhmsG0nVNxgvBTvZoeUnc/Es3yP3QHuE=
